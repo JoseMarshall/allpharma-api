@@ -1,0 +1,93 @@
+[debug] [2019-10-31T13:33:56.214Z] ----------------------------------------------------------------------
+[debug] [2019-10-31T13:33:56.261Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\JosemarCHebo\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js serve
+[debug] [2019-10-31T13:33:56.262Z] CLI Version:   7.6.2
+[debug] [2019-10-31T13:33:56.262Z] Platform:      win32
+[debug] [2019-10-31T13:33:56.262Z] Node Version:  v10.16.3
+[debug] [2019-10-31T13:33:56.264Z] Time:          Thu Oct 31 2019 14:33:56 GMT+0100 (GMT+01:00)
+[debug] [2019-10-31T13:33:56.264Z] ----------------------------------------------------------------------
+[debug] [2019-10-31T13:33:56.264Z] 
+[debug] [2019-10-31T13:33:56.281Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-10-31T13:33:56.282Z] > authorizing via signed-in user
+[debug] [2019-10-31T13:33:56.282Z] [iam] checking project allpharma-e8f00 for permissions ["firebase.projects.get"]
+[debug] [2019-10-31T13:33:56.285Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/allpharma-e8f00:testIamPermissions  
+
+[debug] [2019-10-31T13:33:57.976Z] <<< HTTP RESPONSE 200
+[debug] [2019-10-31T13:33:57.979Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/allpharma-e8f00  
+ 
+[debug] [2019-10-31T13:33:58.963Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'C:\Users\JosemarCHebo\Documents\5º Ano\Projecto II\AllPharma'...
+[info] 
+[info] +  functions: Using node@10 from host.
+[info] +  functions: Emulator started at http://localhost:5000
+[info] i  functions: Watching "C:\Users\JosemarCHebo\Documents\5º Ano\Projecto II\AllPharma\functions" for Cloud Functions...
+[debug] [2019-10-31T13:34:00.766Z] [worker-~diagnostic~-5fd5fc8e-32c9-4b28-b089-9905fe40be16]: BUSY
+[debug] [2019-10-31T13:34:03.205Z] [runtime-status] Functions runtime initialized. {"cwd":"C:\\Users\\JosemarCHebo\\Documents\\5º Ano\\Projecto II\\AllPharma\\functions","node_version":"10.16.3"}
+[debug] [2019-10-31T13:34:03.210Z] [runtime-status] Disabled runtime features: {"functions_config_helper":true,"network_filtering":true,"timeout":true,"memory_limiting":true,"admin_stubs":true} {}
+[debug] [2019-10-31T13:34:03.220Z] [runtime-status] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.6.1","resolution":"C:\\Users\\JosemarCHebo\\Documents\\5º Ano\\Projecto II\\AllPharma\\functions\\node_modules\\firebase-admin\\lib\\index.js"}
+[debug] [2019-10-31T13:34:03.225Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"C:\\Users\\JosemarCHebo\\Documents\\5º Ano\\Projecto II\\AllPharma\\functions\\node_modules\\firebase-functions\\lib\\index.js"}
+[debug] [2019-10-31T13:34:03.228Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"C:\\Users\\JosemarCHebo\\Documents\\5º Ano\\Projecto II\\AllPharma\\functions\\node_modules\\firebase-functions\\lib\\index.js"}
+[info] +  functions[api]: http function initialized (http://localhost:5000/allpharma-e8f00/us-central1/api).
+[info] >  Now listening on port 3000
+[debug] [2019-10-31T13:34:05.996Z] [worker-~diagnostic~-5fd5fc8e-32c9-4b28-b089-9905fe40be16]: exited
+[debug] [2019-10-31T13:34:05.997Z] [worker-~diagnostic~-5fd5fc8e-32c9-4b28-b089-9905fe40be16]: FINISHED
+[debug] [2019-10-31T13:34:44.389Z] Accepted request POST /allpharma-e8f00/us-central1/api/signup --> api
+[debug] [2019-10-31T13:34:44.451Z] [worker-api-024224b6-b7e7-4065-9baa-321c353d5a31]: BUSY
+[debug] [2019-10-31T13:34:45.501Z] [runtime-status] Functions runtime initialized. {"cwd":"C:\\Users\\JosemarCHebo\\Documents\\5º Ano\\Projecto II\\AllPharma\\functions","node_version":"10.16.3"}
+[debug] [2019-10-31T13:34:45.505Z] [runtime-status] Disabled runtime features: {"functions_config_helper":true,"network_filtering":true,"timeout":true,"memory_limiting":true,"admin_stubs":true} {}
+[debug] [2019-10-31T13:34:45.510Z] [runtime-status] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.6.1","resolution":"C:\\Users\\JosemarCHebo\\Documents\\5º Ano\\Projecto II\\AllPharma\\functions\\node_modules\\firebase-admin\\lib\\index.js"}
+[debug] [2019-10-31T13:34:45.512Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"C:\\Users\\JosemarCHebo\\Documents\\5º Ano\\Projecto II\\AllPharma\\functions\\node_modules\\firebase-functions\\lib\\index.js"}
+[debug] [2019-10-31T13:34:45.513Z] [runtime-status] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.3.0","resolution":"C:\\Users\\JosemarCHebo\\Documents\\5º Ano\\Projecto II\\AllPharma\\functions\\node_modules\\firebase-functions\\lib\\index.js"}
+[debug] [2019-10-31T13:34:47.592Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-10-31T13:34:47.634Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[info] >  Now listening on port 80
+[debug] [2019-10-31T13:34:47.635Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-10-31T13:34:47.636Z] {"socketPath":"\\\\?\\pipe\\C:\\Users\\JosemarCHebo\\Documents\\5º Ano\\Projecto II\\AllPharma\\functions\\19936"}
+[debug] [2019-10-31T13:34:47.700Z] [functions] Runtime ready! Sending request! {"socketPath":"\\\\?\\pipe\\C:\\Users\\JosemarCHebo\\Documents\\5º Ano\\Projecto II\\AllPharma\\functions\\19936"}
+[debug] [2019-10-31T13:34:49.174Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-10-31T13:35:22.130Z] [runtime-status] Ephemeral server survived. {}
+[info] >  { email: 'hebojosemar@gmail.com',
+[info] >    collectionName: 'RedeFarmacias',
+[info] >    userName: 'Josemar',
+[info] >    password: '194220' }
+[info] >  Added document with ID:  undefined
+[info] i  functions: Finished "api" in ~6s
+[debug] [2019-10-31T13:35:27.846Z] [worker-api-024224b6-b7e7-4065-9baa-321c353d5a31]: IDLE
+[info] >  Rede de Farmacias cadastrada com sucesso
+[debug] [2019-10-31T13:36:10.871Z] Accepted request POST /allpharma-e8f00/us-central1/api/auth --> api
+[debug] [2019-10-31T13:36:10.871Z] [worker-api-024224b6-b7e7-4065-9baa-321c353d5a31]: BUSY
+[debug] [2019-10-31T13:36:10.872Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-10-31T13:36:10.873Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-10-31T13:36:10.873Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-10-31T13:36:10.874Z] {"socketPath":"\\\\?\\pipe\\C:\\Users\\JosemarCHebo\\Documents\\5º Ano\\Projecto II\\AllPharma\\functions\\19936"}
+[debug] [2019-10-31T13:36:10.943Z] [functions] Runtime ready! Sending request! {"socketPath":"\\\\?\\pipe\\C:\\Users\\JosemarCHebo\\Documents\\5º Ano\\Projecto II\\AllPharma\\functions\\19936"}
+[debug] [2019-10-31T13:36:10.946Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-10-31T13:36:10.949Z] [runtime-status] Ephemeral server survived. {}
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-10-31T13:36:10.952Z] [worker-api-024224b6-b7e7-4065-9baa-321c353d5a31]: IDLE
+[debug] [2019-10-31T13:37:55.596Z] Accepted request POST /allpharma-e8f00/us-central1/api/auth --> api
+[debug] [2019-10-31T13:37:55.596Z] [worker-api-024224b6-b7e7-4065-9baa-321c353d5a31]: BUSY
+[debug] [2019-10-31T13:37:55.597Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-10-31T13:37:55.597Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-10-31T13:37:55.597Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-10-31T13:37:55.598Z] {"socketPath":"\\\\?\\pipe\\C:\\Users\\JosemarCHebo\\Documents\\5º Ano\\Projecto II\\AllPharma\\functions\\19936"}
+[debug] [2019-10-31T13:37:55.598Z] [functions] Runtime ready! Sending request! {"socketPath":"\\\\?\\pipe\\C:\\Users\\JosemarCHebo\\Documents\\5º Ano\\Projecto II\\AllPharma\\functions\\19936"}
+[debug] [2019-10-31T13:37:55.600Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-10-31T13:37:55.602Z] [runtime-status] Ephemeral server survived. {}
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-10-31T13:37:55.941Z] [worker-api-024224b6-b7e7-4065-9baa-321c353d5a31]: IDLE
+[debug] [2019-10-31T13:39:50.019Z] Accepted request POST /allpharma-e8f00/us-central1/api/auth --> api
+[debug] [2019-10-31T13:39:50.020Z] [worker-api-024224b6-b7e7-4065-9baa-321c353d5a31]: BUSY
+[debug] [2019-10-31T13:39:50.020Z] [runtime-status] Trigger "api" has been found, beginning invocation! {}
+[info] i  functions: Beginning execution of "api"
+[debug] [2019-10-31T13:39:50.021Z] [runtime-status]  {"httpsTrigger":{},"name":"api","entryPoint":"api"}
+[debug] [2019-10-31T13:39:50.021Z] [runtime-status] Running api in mode HTTPS {}
+[debug] [2019-10-31T13:39:50.023Z] {"socketPath":"\\\\?\\pipe\\C:\\Users\\JosemarCHebo\\Documents\\5º Ano\\Projecto II\\AllPharma\\functions\\19936"}
+[debug] [2019-10-31T13:39:50.024Z] [functions] Runtime ready! Sending request! {"socketPath":"\\\\?\\pipe\\C:\\Users\\JosemarCHebo\\Documents\\5º Ano\\Projecto II\\AllPharma\\functions\\19936"}
+[debug] [2019-10-31T13:39:50.026Z] [runtime-status] Ephemeral server used! {}
+[debug] [2019-10-31T13:39:50.027Z] [runtime-status] Ephemeral server survived. {}
+[info] i  functions: Finished "api" in ~1s
+[debug] [2019-10-31T13:39:50.652Z] [worker-api-024224b6-b7e7-4065-9baa-321c353d5a31]: IDLE

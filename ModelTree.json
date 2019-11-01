@@ -1,0 +1,563 @@
+{
+    "ContaUsuarios": [{
+        "Username": "",
+        "PasswordHash": "",
+        "Email": "",
+        "CodigoVerificacao": "",
+        "AcessosFalhados": 0,
+        "Advertencias": 0,
+        "UltimoAcesso": "",
+        "CollectionName": "",
+        "ContaUsuariosOrganizacaoPai": "",
+        "CreatedAt": "",
+        "UpdatedAt": "",
+        "Enabled": true
+    }],
+    "RedeFarmacias": [{
+        "ContaUsuariosId": "",
+        "Nome": "",
+        "Proprietario": {
+            "PrimeiroNome": "",
+            "Apelido": "",
+            "NomeCompleto": "",
+            "DataNascimneto": ""
+        },
+        "Descricao": "",
+        "Email": "",
+        "WebSite": "",
+        "NIF": "",
+        "NumAlvara": "",
+        "NumINAPEM": "",
+        "CapitalSocial": 150000,
+        "DataInicioOperacao": "",
+        "CreatedAt": "",
+        "UpdatedAt": "",
+        "CategoriasProduto": [{
+            "Nome": "",
+            "Produtos": [{
+                "Nome": "",
+                "CodigoBarra": "",
+                "CodigoQR": "",
+                "Peso": "",
+                "Dosagem": "",
+                "Encomendavel": true,
+                "Imagens": [{
+                    "Perfil": "",
+                    "Uploads": [{
+                        "Caminho": "",
+                        "CreatedAt": ""
+                    }],
+                    "CreatedAt": "",
+                    "UpdatedAt": ""
+                }]
+            }]
+        }],
+        "Fornecedores": [{
+            "Nome": "",
+            "Email": "",
+            "Descricao": "",
+            "NIF": "",
+            "Enderecos": [{
+                "Provincia": "",
+                "Municipio": "",
+                "Bairro": "",
+                "Rua": "",
+                "Andar": "",
+                "NumPorta": "",
+                "Latitude": "",
+                "Longitude": ""
+            }],
+            "PlanoContas": {
+                "NumeroConta": "",
+                "DescricaoConta": ""
+            },
+            "CreatedAt": "",
+            "UpdatedAt": ""
+
+        }],
+        "ComprasProduto": [{
+            "Descricao": "",
+            "TotalPago": 100000,
+            "Fornecedor": {
+                "Nome": "",
+                "NIF": ""
+            },
+            "ProdutosComprados": [{
+                "Nome": "",
+                "CodigoBarra": "",
+                "CodigoQR": "",
+                "Peso": "",
+                "Dosagem": "",
+                "Encomendavel": true,
+                "Quantidade": 1,
+                "Distribuido": 0,
+                "PrecoUnitarioCompra": 100,
+                "DataValidade": ""
+            }],
+            "MovimentosCompra": {
+                "Referencia": "",
+                "Debito": 0,
+                "Credito": 0,
+                "PlanoContas": {
+                    "NumeroConta": "",
+                    "DescricaoConta": ""
+                },
+                "CreatedAt": "",
+                "UpdatedAt": ""
+            },
+            "CreatedAt": "",
+            "UpdatedAt": ""
+        }],
+        "Farmacias": [{
+            "Nome": "",
+            "Email": "",
+            "Imagens": [{
+                "Perfil": "",
+                "Uploads": [{
+                    "Caminho": "",
+                    "CreatedAt": ""
+                }],
+                "CreatedAt": "",
+                "UpdatedAt": ""
+            }],
+            "CaixaInicial": 1000000,
+            "Endereco": {
+                "Provincia": "",
+                "Municipio": "",
+                "Bairro": "",
+                "Rua": "",
+                "Andar": "",
+                "NumPorta": "",
+                "Latitude": "",
+                "Longitude": ""
+            },
+            "Telefones": [""],
+            "Funcionarios": [{
+                "NumIdentificacao": "",
+                "Nome": {
+                    "Primeiro": "",
+                    "Apelido": "",
+                    "Alias": "",
+                    "Completo": ""
+                },
+                "Email": "",
+                "NIF": "",
+                "NumeroCxSocial": "",
+                "DataNascimento": "",
+                "Genero": "",
+                "Perfil": "",
+                "Endereco": {
+                    "Provincia": "",
+                    "Municipio": "",
+                    "Bairro": "",
+                    "Rua": "",
+                    "Andar": "",
+                    "NumPorta": "",
+                    "Latitude": "",
+                    "Longitude": ""
+                },
+                "Telefones": []
+            }],
+            "Stock": [{
+                "Nome": "",
+                "CodigoBarra": "",
+                "CodigoQR": "",
+                "Peso": "",
+                "Dosagem": "",
+                "QuantidadeInicial": 1,
+                "QuantidadeDisponivel": 1,
+                "PrecoUnitarioVenda": 100,
+                "Encomendavel": true,
+                "CreatedAt": "",
+                "UpdatedAt": ""
+            }],
+            "ProdutosPrateleira": [{
+                "Nome": "",
+                "CodigoBarra": "",
+                "CodigoQR": "",
+                "Peso": "",
+                "Dosagem": "",
+                "Quantidade": 1,
+                "PrecoUnitarioVenda": 100,
+                "Encomendavel": true,
+                "Imagens": [{
+                    "Perfil": "",
+                    "Uploads": [{
+                        "Caminho": "",
+                        "CreatedAt": ""
+                    }]
+                }],
+                "CreatedAt": "",
+                "UpdatedAt": ""
+            }],
+            "MovimentosCompra": {
+                "Referencia": "",
+                "Debito": 0,
+                "Credito": 0,
+                "PlanoContas": {
+                    "NumeroConta": "",
+                    "DescricaoConta": ""
+                }
+
+            },
+            "Vendas": [{
+                "Descricao": "",
+                "NomeFuncionario": "",
+                "NumIdentificacaoFuncionario": "",
+                "ProdutosVendidos": [{
+                    "Nome": "",
+                    "CodigoBarra": "",
+                    "CodigoQR": "",
+                    "Peso": "",
+                    "Dosagem": "",
+                    "Quantidade": 1,
+                    "PrecoUnitarioVenda": 100,
+                    "SubTotal": 100
+                }],
+                "NomeCliente": "",
+                "MovimentosVenda": {
+                    "Referencia": "",
+                    "Debito": 0,
+                    "Credito": 0,
+                    "PlanoContas": {
+                        "NumeroConta": "",
+                        "DescricaoConta": ""
+                    }
+
+                },
+                "CreatedAt": "",
+                "UpdatedAt": ""
+            }],
+            "Encomendas": [{
+                "Descricao": "",
+                "DataDesejadaEntrega": "",
+                "TotalReceber": 10000,
+                "Endereco": {
+                    "Provincia": "",
+                    "Municipio": "",
+                    "Bairro": "",
+                    "Rua": "",
+                    "Andar": "",
+                    "NumPorta": "",
+                    "Latitude": "",
+                    "Longitude": ""
+                },
+                "ProdutosEncomendados": [{
+                    "Categoria": "",
+                    "Nome": "",
+                    "CodigoBarra": "",
+                    "CodigoQR": "",
+                    "Peso": "",
+                    "Dosagem": "",
+                    "Quntidade": 1,
+                    "PrecoUnitarioVenda": 1000,
+                    "SubTotal": 1000
+                }],
+                "PlanoContas": {
+                    "NumeroConta": "",
+                    "DescricaoConta": ""
+                },
+                "Status": 0,
+                "CreatedAt": "",
+                "UpdatedAt": ""
+            }],
+            "RegistoTroco": [{
+                "Referencia": "",
+                "ValorTroco": 100,
+                "Vendas": {
+                    "Descricao": "",
+                    "NomeFuncionario": "",
+                    "NumIdentificacaoFuncionario": ""
+                },
+                "PlanoContas": {
+                    "NumeroConta": "",
+                    "DescricaoConta": ""
+                },
+                "CreatedAt": "",
+                "UpdatedAt": ""
+            }],
+            "Comentarios": [{
+                "Classificacao": 5,
+                "Message": {
+                    "From": "",
+                    "Subject": "",
+                    "Text": "",
+                    "CreatedAt": "",
+                    "UpdatedAt": ""
+                }
+            }],
+            "CreatedAt": "",
+            "UpdatedAt": ""
+        }],
+        "Perfis": [{
+            "Nome": "",
+            "Menus": [{
+                "Nome": "",
+                "URL": ""
+            }]
+        }]
+    }],
+    "FuncionariosFarmacia": [{
+        "ContaUsuariosId": "",
+        "NumIdentificacao": "",
+        "Nome": {
+            "Primeiro": "",
+            "Apelido": "",
+            "Alias": "",
+            "Completo": ""
+        },
+        "Email": "",
+        "NIF": "",
+        "NumeroCxSocial": "",
+        "DataNascimento": "",
+        "Genero": "",
+        "Perfil": "",
+        "Menus": [{
+            "Nome": "",
+            "URL": ""
+        }],
+        "Endereco": {
+            "Provincia": "",
+            "Municipio": "",
+            "Bairro": "",
+            "Rua": "",
+            "Andar": "",
+            "NumPorta": "",
+            "Latitude": "",
+            "Longitude": ""
+        },
+        "Telefones": [],
+        "Farmacia": {
+            "Nome": "",
+            "FarmaciaId": ""
+        }
+
+    }],
+    "OrdemEnfermeiros": [{
+        "ContaUsuariosId": "",
+        "Sigla": "",
+        "Descricao": "",
+        "Endereco": {
+            "Provincia": "",
+            "Municipio": "",
+            "Bairro": "",
+            "Rua": "",
+            "Andar": "",
+            "NumPorta": "",
+            "Latitude": "",
+            "Longitude": ""
+        },
+        "Telefones": [""],
+        "Enfermeiros": [{
+            "Nome": {
+                "Primeiro": "",
+                "Apelido": "",
+                "Completo": ""
+            },
+            "NumCarteira": "",
+            "Genero": "",
+            "CreatedAt": "",
+            "UpdatedAt": ""
+        }],
+        "CreatedAt": "",
+        "UpdatedAt": ""
+    }],
+    "Enfermeiros": [{
+        "ContaUsuariosId": "",
+        "Nome": {
+            "Primeiro": "",
+            "Apelido": "",
+            "Completo": ""
+        },
+        "NumCarteira": "",
+        "Genero": "",
+        "Especialidades": [""],
+        "AjudasPrestadas": [{
+            "DescricaoPedido": "",
+            "NomePaciente": "",
+            "NumIdentificacaoPaciente": "",
+            "Endereco": {
+                "Provincia": "",
+                "Municipio": "",
+                "Bairro": "",
+                "Rua": "",
+                "Andar": "",
+                "NumPorta": "",
+                "Latitude": "",
+                "Longitude": ""
+            },
+            "CreatedAt": ""
+        }],
+        "CreatedAt": "",
+        "UpdatedAt": ""
+    }],
+    "OrdemFarmaceuticos": [{
+        "ContaUsuariosId": "",
+        "Sigla": "",
+        "Descricao": "",
+        "Endereco": {
+            "Provincia": "",
+            "Municipio": "",
+            "Bairro": "",
+            "Rua": "",
+            "Andar": "",
+            "NumPorta": "",
+            "Latitude": "",
+            "Longitude": ""
+        },
+        "Telefones": [""],
+        "Farmaceuticos": [{
+            "Nome": {
+                "Primeiro": "",
+                "Apelido": "",
+                "Completo": ""
+            },
+            "NumCarteira": "",
+            "Genero": "",
+            "CreatedAt": "",
+            "UpdatedAt": ""
+        }],
+        "CreatedAt": "",
+        "UpdatedAt": ""
+    }],
+    "Farmaceuticos": [{
+        "ContaUsuariosId": "",
+        "Nome": {
+            "Primeiro": "",
+            "Apelido": "",
+            "Completo": ""
+        },
+        "NumCarteira": "",
+        "Genero": "",
+        "Especialidades": [""],
+        "AjudasPrestadas": [{
+            "DescricaoPedido": "",
+            "NomePaciente": "",
+            "NumIdentificacaoPaciente": "",
+            "Endereco": {
+                "Provincia": "",
+                "Municipio": "",
+                "Bairro": "",
+                "Rua": "",
+                "Andar": "",
+                "NumPorta": "",
+                "Latitude": "",
+                "Longitude": ""
+            },
+            "CreatedAt": ""
+        }],
+        "CreatedAt": "",
+        "UpdatedAt": ""
+    }],
+
+    "ClientesPacientes": [{
+        "ContaUsuariosId": "",
+        "Nome": {
+            "Primeiro": "",
+            "Apelido": "",
+            "Completo": ""
+        },
+        "NumIdentificacao": "",
+        "Genero": "",
+        "DataNascimento": "",
+        "Endereco": {
+            "Provincia": "",
+            "Municipio": "",
+            "Bairro": "",
+            "Rua": "",
+            "Andar": "",
+            "NumPorta": "",
+            "Latitude": "",
+            "Longitude": ""
+        },
+        "PedidosAjuda": [{
+            "DescricaoPedido": "",
+            "Endereco": {
+                "Provincia": "",
+                "Municipio": "",
+                "Bairro": "",
+                "Rua": "",
+                "Andar": "",
+                "NumPorta": "",
+                "Latitude": "",
+                "Longitude": ""
+            },
+            "Status": 0,
+            "CreatedAt": "",
+            "UpdatedAt": ""
+        }],
+        "Encomendas": [{
+            "Descricao": "",
+            "DataDesejadaEntrega": "",
+            "Endereco": {
+                "Provincia": "",
+                "Municipio": "",
+                "Bairro": "",
+                "Rua": "",
+                "Andar": "",
+                "NumPorta": "",
+                "Latitude": "",
+                "Longitude": ""
+            },
+            "ProdutosEncomendados": [{
+                "Categoria": "",
+                "Nome": "",
+                "CodigoBarra": "",
+                "CodigoQR": "",
+                "Peso": "",
+                "Dosagem": "",
+                "Quntidade": 1,
+                "PrecoUnitarioVenda": 1000,
+                "SubTotal": 1000
+            }],
+            "Status": 0,
+            "CreatedAt": "",
+            "UpdatedAt": ""
+        }],
+        "CreatedAt": "",
+        "UpdatedAt": ""
+    }],
+
+    "Enderecos": [{
+        "NomeProvincia": "",
+        "Municipios": [{
+            "NomeMunicipio": "",
+            "Bairros": [
+                ""
+            ]
+        }]
+    }],
+    "Generos": [{
+        "Nome": ""
+    }],
+    "PedidosAjuda": [{
+        "DescricaoPedido": "",
+        "NomePaciente": "",
+        "NumIdentificacaoPaciente": "",
+        "Endereco": {
+            "Provincia": "",
+            "Municipio": "",
+            "Bairro": "",
+            "Rua": "",
+            "Andar": "",
+            "NumPorta": "",
+            "Latitude": "",
+            "Longitude": ""
+        },
+        "Status": 0,
+        "CreatedAt": "",
+        "UpdatedAt": ""
+    }],
+    "Messages": [{
+        "From": "",
+        "To": "",
+        "Subject": "",
+        "Text": "",
+        "CreatedAt": "",
+        "UpdatedAt": ""
+    }],
+    "Menus": [{
+        "Nome": "",
+        "URL": ""
+    }]
+}
