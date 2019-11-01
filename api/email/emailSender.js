@@ -83,7 +83,7 @@ exports.sendEmailSignUp = (user, pass, emailDest) => {
     };
     const HTML = loadTemplate('credentials.hbs', context); //O html que irá no corpo do e-amil
     console.log('Trying to send email to: ' + emailDest);
-    send(emailDest, HTML)
+    return send(emailDest, HTML)
         .then(data => {
             console.log(data);
             fs.appendFileSync(path.join(__dirname, 'sendingSuccessful.txt'),

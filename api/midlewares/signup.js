@@ -45,11 +45,6 @@ exports.createAccount = async(req, res, next) => {
                 .then(ref => {
                     console.log('Added document with ID: ', ref.id);
 
-                    // emailSender.sendEmailSignUp(req.body.contaUsuarios.userName,
-                    //     req.body.contaUsuarios.password,
-                    //     req.body.contaUsuarios.email)
-
-
                     switch (req.body.contaUsuarios.collectionName) {
                         case 'RedeFarmacias':
                             redeFarmaciaController.create(req.body.novaFarmacia, req.body.contaUsuarios.userName)
@@ -58,6 +53,11 @@ exports.createAccount = async(req, res, next) => {
                         default:
                             break;
                     }
+
+                    emailSender.sendEmailSignUp(req.body.contaUsuarios.userName,
+                        req.body.contaUsuarios.password,
+                        req.body.contaUsuarios.email)
+
                     return res.status(201).json({
                         msg: 'Conta criada com sucesso, por favor verifique a caixa de entrada do seu e-mail se recebeu as credenciais de acesso, pode demorar até 1 hora',
                         password: req.body.contaUsuarios.password, //ELIMINAR ESTA KEY
