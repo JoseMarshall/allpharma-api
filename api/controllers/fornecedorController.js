@@ -1,6 +1,6 @@
 require('dotenv').config()
 const { db } = require('../../functions/credentials/admin')
-
+const moment = require('moment');
 // "Fornecedores": [{
 //     "Nome": "",
 //     "Email": "",
@@ -26,6 +26,9 @@ const { db } = require('../../functions/credentials/admin')
 // }]
 
 exports.create = async(req, res, next) => {
+
+    req.body.fornecedor.updatedAt = null
+    req.body.fornecedor.createdAt = moment().toJSON()
 
     db
         .collection(req.body.connection.collectionName)
@@ -101,7 +104,8 @@ exports.delete = (req, res, next) => {
                     })
                     .catch(next)
             } else {
-                next()
+                return res.status(204).send({ msg: 'Não foi encontrado nenhum registos' })
+
             }
         })
         .catch(next)
@@ -128,7 +132,8 @@ exports.update = (req, res, next) => {
                     })
                     .catch(next)
             } else {
-                next()
+                return res.status(204).send({ msg: 'Não foi encontrado nenhum registos' })
+
             }
         })
         .catch(next)

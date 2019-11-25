@@ -1,5 +1,4 @@
-const express = require('express')
-const router = express.Router()
+const router = require('express').Router()
 const redeFarmaciaController = require('../controllers/redeFarmaciaController')
 
 router.get('/:id', redeFarmaciaController.getOne)

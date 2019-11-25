@@ -4,25 +4,26 @@ const { db } = require('../../functions/credentials/admin')
 
 
 
-exports.check = (req, res, next) => {
+exports.checkToken = (req, res, next) => {
     try {
         const incomingToken = req.headers.authorization.split(' ')[1]
         const decodedToken = jwt.verify(incomingToken, process.env.JWT_KEY)
         db
             .collection('ContaUsuarios')
-            .doc(decodedToken.ContaUsuariosId)
+            .doc(decodedToken.contaUsuariosId)
             .get()
             .then(doc => {
                 if (doc.exists) {
                     const {
-                        CollectionName,
-                        ContaUsuariosOrganizacaoPai,
-                        ContaUsuariosId
+                        collectionName,
+                        contaUsuariosOrganizacaoPai
                     } = doc.data()
-                    if (CollectionName == decodedToken.CollectionName) {
-                        req.body.connection.CollectionName = CollectionName,
-                            req.body.connection.ContaUsuariosOrganizacaoPai = ContaUsuariosOrganizacaoPai,
-                            req.body.connection.ContaUsuariosId = ContaUsuariosId
+                    if (collectionName == decodedToken.collectionName) {
+                        req.body.connection = {
+                            collectionName,
+                            contaUsuariosOrganizacaoPai,
+                            contaUsuariosId: doc.id
+                        }
                     }
                 }
 
@@ -40,4 +41,28 @@ exports.check = (req, res, next) => {
                 error: err.message
             })
     }
+}
+
+exports.checkMenuAccess = (req, res, next) => {
+
+    db
+        .collection(req.body.connection.collectionName)
+        .doc(req.body.connection.contaUsuariosId)
+        .get()
+        .then((doc) => {
+            if (doc.exists) {
+                let { menus } = doc.data()
+                return menus.includes(req.url.replace(req.params.id, '')) ?
+                    next() :
+                    res.status(403).json({
+                        msg: 'You\'re not authorized'
+                    })
+
+            } else {
+                return res.status(403).json({
+                    msg: 'You\'re not authorized'
+                })
+            }
+        })
+
 }

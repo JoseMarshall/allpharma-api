@@ -109,6 +109,7 @@
             "UpdatedAt": ""
         }],
         "Farmacias": [{
+            "RedeFarmaciaId": "",
             "Nome": "",
             "Email": "",
             "Imagens": [{
@@ -116,9 +117,7 @@
                 "Uploads": [{
                     "Caminho": "",
                     "CreatedAt": ""
-                }],
-                "CreatedAt": "",
-                "UpdatedAt": ""
+                }]
             }],
             "CaixaInicial": 1000000,
             "Endereco": {
@@ -158,7 +157,7 @@
                 },
                 "Telefones": []
             }],
-            "Stock": [{
+            "Stocks": [{
                 "Nome": "",
                 "CodigoBarra": "",
                 "CodigoQR": "",
@@ -180,6 +179,7 @@
                 "Quantidade": 1,
                 "PrecoUnitarioVenda": 100,
                 "Encomendavel": true,
+                "Visivel": true,
                 "Imagens": [{
                     "Perfil": "",
                     "Uploads": [{
@@ -190,18 +190,11 @@
                 "CreatedAt": "",
                 "UpdatedAt": ""
             }],
-            "MovimentosCompra": {
-                "Referencia": "",
-                "Debito": 0,
-                "Credito": 0,
-                "PlanoContas": {
-                    "NumeroConta": "",
-                    "DescricaoConta": ""
-                }
-
-            },
             "Vendas": [{
                 "Descricao": "",
+                "valorPago": 100,
+                "troco": 0,
+                "registatroco": false,
                 "NomeFuncionario": "",
                 "NumIdentificacaoFuncionario": "",
                 "ProdutosVendidos": [{
@@ -229,6 +222,7 @@
                 "UpdatedAt": ""
             }],
             "Encomendas": [{
+                "ClientePacienteId": "",
                 "Descricao": "",
                 "DataDesejadaEntrega": "",
                 "TotalReceber": 10000,
@@ -253,18 +247,14 @@
                     "PrecoUnitarioVenda": 1000,
                     "SubTotal": 1000
                 }],
-                "PlanoContas": {
-                    "NumeroConta": "",
-                    "DescricaoConta": ""
-                },
                 "Status": 0,
                 "CreatedAt": "",
                 "UpdatedAt": ""
             }],
             "RegistoTroco": [{
                 "Referencia": "",
-                "ValorTroco": 100,
-                "Vendas": {
+                "troco": 100,
+                "Venda": {
                     "Descricao": "",
                     "NomeFuncionario": "",
                     "NumIdentificacaoFuncionario": ""
@@ -284,7 +274,13 @@
                     "Text": "",
                     "CreatedAt": "",
                     "UpdatedAt": ""
-                }
+                },
+                "Respostas": [{
+                    "From": "",
+                    "Text": "",
+                    "CreatedAt": "",
+                    "UpdatedAt": ""
+                }]
             }],
             "CreatedAt": "",
             "UpdatedAt": ""
@@ -369,6 +365,7 @@
             "Apelido": "",
             "Completo": ""
         },
+        "imagemPerfil": "",
         "NumCarteira": "",
         "Genero": "",
         "Especialidades": [""],
@@ -452,6 +449,7 @@
 
     "ClientesPacientes": [{
         "ContaUsuariosId": "",
+        "ImagemPerfil": "",
         "Nome": {
             "Primeiro": "",
             "Apelido": "",
@@ -471,7 +469,11 @@
             "Longitude": ""
         },
         "PedidosAjuda": [{
+            "AtendidoPor": "",
+            "clientePacienteId": "",
             "DescricaoPedido": "",
+            "NomePaciente": "",
+            "NumIdentificacaoPaciente": "",
             "Endereco": {
                 "Provincia": "",
                 "Municipio": "",
@@ -487,6 +489,8 @@
             "UpdatedAt": ""
         }],
         "Encomendas": [{
+            "RedeFarmaciaId": "",
+            "FarmaciaId": "",
             "Descricao": "",
             "DataDesejadaEntrega": "",
             "Endereco": {
@@ -517,20 +521,12 @@
         "CreatedAt": "",
         "UpdatedAt": ""
     }],
-
-    "Enderecos": [{
-        "NomeProvincia": "",
-        "Municipios": [{
-            "NomeMunicipio": "",
-            "Bairros": [
-                ""
-            ]
-        }]
-    }],
     "Generos": [{
         "Nome": ""
     }],
     "PedidosAjuda": [{
+        "clientePacienteId": "",
+        "AtendidoPor": "",
         "DescricaoPedido": "",
         "NomePaciente": "",
         "NumIdentificacaoPaciente": "",
@@ -548,7 +544,7 @@
         "CreatedAt": "",
         "UpdatedAt": ""
     }],
-    "Messages": [{
+    "Mensagens": [{
         "From": "",
         "To": "",
         "Subject": "",

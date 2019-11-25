@@ -1,12 +1,2 @@
-let obj = {
-    a: 'Josemar',
-    b: 'Caculo',
-    c: 'Hebo'
-}
-const {
-    a,
-    b,
-    c
-} = obj
-
-console.log(a, b, c);
+const guid = require('guid');
+console.log(guid.create().value)

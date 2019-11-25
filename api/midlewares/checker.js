@@ -16,26 +16,26 @@ const generateNewCredentials = (form) => {
 
     return new Promise(async(resolve, reject) => {
 
-        const milliSeconds = new Date().getMilliseconds().toString()
+        const milliSeconds = new Date().getMilliseconds().toString() + '00'
         const day = new Date().getDate().toString()
         let credentialGenerated = '' //Username temporario
         let keepOn = true
         let nameTrimed
             //testa cada possivel username dentro do array, e atribuir o primeiro válido ao credentialGenerated
         for (let iterator of[
-                form.Objecto.primeiroNome,
-                form.Objecto.apelido,
-                form.Objecto.primeiroNome + day,
-                form.Objecto.apelido + day,
-                form.Objecto.primeiroNome + milliSeconds,
-                form.Objecto.apelido + milliSeconds,
-                form.Objecto.primeiroNome[0] + form.Objecto.apelido,
-                form.Objecto.primeiroNome[0] + form.Objecto.apelido + milliSeconds[0],
-                form.Objecto.primeiroNome[0] + form.Objecto.apelido + milliSeconds[1],
-                form.Objecto.primeiroNome[0] + form.Objecto.apelido + milliSeconds[2],
-                form.Objecto.primeiroNome[0] + form.Objecto.apelido + day,
-                form.Objecto.primeiroNome + form.Objecto.dataNascimento.slice(8),
-                form.Objecto.primeiroNome + form.Objecto.dataNascimento.slice(8) + milliSeconds
+                form.objecto.primeiroNome,
+                form.objecto.apelido,
+                form.objecto.primeiroNome + day,
+                form.objecto.apelido + day,
+                form.objecto.primeiroNome + milliSeconds,
+                form.objecto.apelido + milliSeconds,
+                form.objecto.primeiroNome[0] + form.objecto.apelido,
+                form.objecto.primeiroNome[0] + form.objecto.apelido + milliSeconds[0],
+                form.objecto.primeiroNome[0] + form.objecto.apelido + milliSeconds[1],
+                form.objecto.primeiroNome[0] + form.objecto.apelido + milliSeconds[2],
+                form.objecto.primeiroNome[0] + form.objecto.apelido + day,
+                form.objecto.primeiroNome + form.objecto.dataNascimento.slice(8),
+                form.objecto.primeiroNome + form.objecto.dataNascimento.slice(8) + milliSeconds
             ]) {
             iterator = stringHelper.removeEspecialChars(iterator)
 
@@ -128,8 +128,8 @@ const existsCodeVerification = (userName, code) => {
 
         db
             .collection('ContaUsuarios')
-            .where('Username', '==', userName)
-            .where('CodigoVerificacao', '==', code)
+            .where('username', '==', userName)
+            .where('codigoVerificacao', '==', code)
             .get()
             .then(snapshot => {
                 resolve(!snapshot.empty)

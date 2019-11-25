@@ -35,9 +35,9 @@ exports.create = (newPharma, Id) => {
         .collection('RedeFarmacias')
         .doc(Id)
         .set({
-            ContaUsuariosId: Id,
-            CreatedAt: moment().toJSON(),
-            UpdatedAt: null,
+            contaUsuariosId: Id,
+            createdAt: moment().toJSON(),
+            updatedAt: null,
             ...newPharma
         })
         .then(function() {
@@ -51,7 +51,7 @@ exports.create = (newPharma, Id) => {
 
 exports.getOne = (req, res, next) => {
     db
-        .collection(req.body.connection.collectionName)
+        .collection('RedeFarmacias')
         .doc(req.params.id)
         .get()
         .then(doc => {
@@ -94,7 +94,7 @@ exports.update = (req, res, next) => {
         .get()
         .then(doc => {
             if (doc.exists) {
-                req.body.redeFarmacia.UpdatedAt = moment().toJSON()
+                req.body.redeFarmacia.updatedAt = moment().toJSON()
                 doc.ref
                     .update(req.body.redeFarmacia)
                     .then((result) => {
@@ -107,7 +107,8 @@ exports.update = (req, res, next) => {
                     })
                     .catch(next)
             } else {
-                next()
+                return res.status(204).send({ msg: 'Não foi encontrado nenhum registos' })
+
             }
         })
         .catch(next)
@@ -127,7 +128,8 @@ exports.delete = (req, res, next) => {
                     })
                     .catch(next)
             } else {
-                next()
+                return res.status(204).send({ msg: 'Não foi encontrado nenhum registos' })
+
             }
         })
         .catch(next)

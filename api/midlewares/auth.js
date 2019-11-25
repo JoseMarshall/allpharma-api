@@ -6,42 +6,43 @@ const { db } = require('../../functions/credentials/admin')
 const emailSender = require('../email/emailSender');
 
 function generateToken(user, res) {
+
     jwt.sign({
-            ContaUsuariosId: user.ContaUsuariosId,
-            CollectionName: user.CollectionName
+            contaUsuariosId: user.contaUsuariosId,
+            collectionName: user.collectionName
         },
         process.env.JWT_KEY, { expiresIn: '8h' },
 
         (err, token) => {
             if (err) {
                 return res.status(500).send({ error: err.message })
+            } else {
+                return db
+                    .collection('ContaUsuarios')
+                    .doc(user.contaUsuariosId)
+                    .get()
+                    .then((doc) => {
+
+                        doc.ref.update({
+                            acessosFalhados: 0,
+                            ultimoAcesso: moment().toJSON(),
+                            updatedAt: moment().toJSON(),
+                        })
+
+
+                        return res.status(200).send({
+                            token: 'Bearer ' + token,
+                            msg: 'login successfull, verifique o token enviado'
+                        })
+                    })
+                    .catch((err) => {
+                        return res.status(500).send({
+                            codigoErro: err.code,
+                            erro: err.message,
+                            msg: ':( Ocorreu um erro ao tentar gerar o token de acesso. Por favor tente mais tarde'
+                        })
+                    })
             }
-
-            db
-                .collection('ContaUsuarios')
-                .doc(user.ContaUsuariosId)
-                .get()
-                .then((doc) => {
-
-                    doc.ref.update({
-                        AcessosFalhados: 0,
-                        UltimoAcesso: moment().toJSON(),
-                        UpdatedAt: moment().toJSON(),
-                    })
-
-
-                    return res.status(200).send({
-                        token: 'Bearer ' + token,
-                        msg: 'login successfull, verifique o token enviado'
-                    })
-                })
-                .catch((err) => {
-                    return res.status(500).send({
-                        codigoErro: err.code,
-                        erro: err.message,
-                        msg: ':( Ocorreu um erro ao tentar gerar o token de acesso. Por favor tente mais tarde'
-                    })
-                })
 
 
         }
@@ -59,27 +60,28 @@ exports.checkAuth = (req, res, next) => {
         .then((doc) => {
             if (doc.exists) {
                 const {
-                    Enabled,
-                    PasswordHash,
-                    UltimoAcesso,
-                    CollectionName,
-                    AcessosFalhados
+                    enabled,
+                    passwordHash,
+                    ultimoAcesso,
+                    collectionName,
+                    acessosFalhados
                 } = doc.data()
 
-                if (Enabled) {
-                    bcrypt.compare(req.body.password, PasswordHash).then(result => {
+                if (enabled) {
+                    bcrypt.compare(req.body.password, passwordHash).then(result => {
                         if (result) {
-                            if (UltimoAcesso === null) {
+                            if (ultimoAcesso === null) {
                                 return res.status(307).send({
                                         msg: 'Por favor redefina a sua palavra-passe',
-                                        userName: req.body.username,
+                                        username: req.body.username,
+                                        passwordHash: passwordHash,
                                         link: process.env.LINK_RECUPERACAO_SENHA
                                     }) //O link para a redefinição de senha
 
                             } else {
                                 let user = {
-                                    ContaUsuariosId: doc.id,
-                                    CollectionName
+                                    contaUsuariosId: doc.id,
+                                    collectionName
                                 }
                                 return generateToken(user, res)
                             }
@@ -87,20 +89,20 @@ exports.checkAuth = (req, res, next) => {
 
                             doc.ref
                                 .update({
-                                    AcessosFalhados: (AcessosFalhados + 1),
-                                    UpdatedAt: moment().toJSON(),
+                                    acessosFalhados: (acessosFalhados + 1),
+                                    updatedAt: moment().toJSON(),
                                 })
 
-                            if (AcessosFalhados == 4) {
+                            if (acessosFalhados == 4) {
                                 const validationCode = Math.floor((Math.random() * 99999) + 10000)
                                 doc.ref
                                     .update({
-                                        Enabled: false,
-                                        CodigoVerificacao: validationCode,
-                                        UpdatedAt: moment().toJSON(),
+                                        enabled: false,
+                                        codigoVerificacao: validationCode,
+                                        updatedAt: moment().toJSON(),
                                     })
 
-                                return res.status(403).send({ msg: 'Conta bloqueada, terá que solicitar a reactivação da conta para voltar a ter acesso à plataforma, clicando em \"recuperar senha\" na página inicial' })
+                                return res.status(403).send({ msg: 'Conta bloqueada, terá que solicitar a reactivação da conta para voltar a ter acesso à plataforma, clicando em "recuperar senha" na página inicial' })
 
                             } else {
                                 return res.status(401).send({ msg: 'Authentication Failed' })
@@ -131,7 +133,7 @@ exports.checkAuth = (req, res, next) => {
  */
 exports.setNewPassword = (req, res, next) => {
 
-    bcrypt.hash(req.body.password, 10)
+    bcrypt.hash(req.body.newPassword, 10)
         .then(hash => {
 
             db
@@ -140,18 +142,28 @@ exports.setNewPassword = (req, res, next) => {
                 .get()
                 .then((doc) => {
                     if (doc.exists) {
-                        doc.ref.update({
-                            PasswordHash: hash,
-                            CodigoVerificacao: null,
-                            Enabled: true
-                        })
+                        if (doc.data().passwordHash === req.body.passwordHash) {
+                            doc.ref.update({
+                                    passwordHash: hash,
+                                    codigoVerificacao: null,
+                                    ultimoAcesso: moment().toJSON(),
+                                    enabled: true
+                                })
+                                .then(() => {
 
-                        let user = {
-                            ContaUsuariosId: doc.data().ContaUsuariosId,
-                            CollectionName: doc.data().CollectionName
+                                    let user = {
+                                        contaUsuariosId: doc.id,
+                                        collectionName: doc.data().collectionName
+                                    }
+
+                                    return generateToken(user, res)
+                                })
+
+                        } else {
+                            return res.status(403).send({
+                                msg: 'You are not authorized'
+                            })
                         }
-
-                        return generateToken(user, res)
                     } else {
                         return res.status(401).send({
                             msg: 'Algo correu mal. Por favor tente mais tarde'
@@ -184,26 +196,26 @@ exports.requestPassword = (req, res, next) => {
         .then((doc) => {
 
             if (doc.exists) {
-                const CodigoVerificacao = Math.floor((Math.random() * 999999) + 100000)
+                const codigoVerificacao = Math.floor((Math.random() * 999999) + 100000)
                 doc.ref.update({
-                        CodigoVerificacao: CodigoVerificacao,
-                        UpdatedAt: moment().toJSON()
+                        codigoVerificacao: codigoVerificacao,
+                        updatedAt: moment().toJSON()
                     })
                     .then(() => {
 
                         //send a link containing the validationCode and the username byEmail for redefinition of password 
                         //Ex: http://www.allpharmar.co.ao/verify/ContaUsuarios?username=Josemar354&code=123456             
-                        let link = process.env.URL_ROOT + '/verify/ContaUsuarios?username=' + req.body.username + '&validationCode=' + CodigoVerificacao;
+                        let link = `${process.env.URL_ROOT}/reactivateAccount?username=${req.body.username}&validationCode=${codigoVerificacao}`;
 
-                        emailSender.sendEmaiValidationCode(req.query.username,
-                            newPassword,
+                        emailSender.sendEmaiValidationCode(doc.id,
+                            codigoVerificacao,
                             link,
-                            doc.data().Email)
+                            doc.data().email)
 
                         return res.status(200).send({
                             msg: 'Abre o email e checa se recebeu  codigo de verificação, pode demorar até 1 hora',
-                            validationCode: validationCode, //ELIMINAR ESTA KEY
-                            Id: user.dataValues.Id, //ELIMINAR ESTA KEY
+                            validationCode: codigoVerificacao, //ELIMINAR ESTA KEY
+                            username: doc.id, //ELIMINAR ESTA KEY
 
                         })
                     })
@@ -249,15 +261,15 @@ exports.reactivateAccount = (req, res, next) => {
         .then((doc) => {
             if (doc.exists) {
                 const {
-                    CodigoVerificacao,
-                    Enabled,
-                    Email,
-                    UpdatedAt
+                    codigoVerificacao,
+                    enabled,
+                    email,
+                    updatedAt
                 } = doc.data()
 
-                if (!Enabled && CodigoVerificacao == req.query.validationCode) {
+                if (!enabled && codigoVerificacao == req.query.validationCode) {
 
-                    if (moment().diff(UpdatedAt) > 1) {
+                    if (moment().diff(updatedAt) > 3600000) { //Verifica se não passou mais de uma hora desde a requisição da senha
 
                         return res.status(401).send({
                             msg: 'O seu codivo de validação expirou, por favor solicite um novo codigo para a recuperação da sua senha',
@@ -267,16 +279,18 @@ exports.reactivateAccount = (req, res, next) => {
                         const newPassword = (parseInt(req.query.validationCode) + 413915).toString()
                         bcrypt.hash(newPassword, 10).then(hash => {
                             doc.ref.update({
-                                CodigoVerificacao: null,
-                                PasswordHash: hash,
-                                Enabled: true,
-                                UpdatedAt: moment().toJSON()
+                                acessosFalhados: 0,
+                                codigoVerificacao: null,
+                                ultimoAcesso: null,
+                                passwordHash: hash,
+                                enabled: true,
+                                updatedAt: moment().toJSON()
                             })
 
                             //send a link containing the newPasword to user byEmail e o link da homepage da allpharma
                             emailSender.sendEmailSignUp(req.query.username,
                                 newPassword,
-                                Email)
+                                email)
 
                             return res.status(201).send({
                                 msg: 'Abre o email e checa se recebeu a sua nova Palavra-Passe',

@@ -1,10 +1,17 @@
+const moment = require('moment')
+const bcrypt = require('bcrypt')
+
 const { db } = require('../../functions/credentials/admin')
 
-const bcrypt = require('bcrypt')
 const emailSender = require("../email/emailSender");
 const CheckerController = require('./checker')
-const moment = require('moment')
+
 const redeFarmaciaController = require('../controllers/redeFarmaciaController');
+const ordemEnfermeirosController = require('../controllers/ordemEnfermeirosController');
+const ordemFarmaceuticosController = require('../controllers/ordemFarmaceuticosController');
+const enfermeirosController = require('../controllers/enfermeirosController');
+const farmaceuticosController = require('../controllers/farmaceuticosController');
+const clientePacienteController = require('../controllers/clientePacienteController');
 
 
 
@@ -26,30 +33,45 @@ exports.createAccount = async(req, res, next) => {
             // Add a new document with a generated id.
 
             let newAccount = {
-                Username: req.body.contaUsuarios.userName,
-                PasswordHash: passwordHash,
-                Email: req.body.contaUsuarios.email,
-                CodigoVerificacao: codeVerification,
-                AcessosFalhados: 0,
-                Advertencias: 0,
-                UltimoAcesso: null,
-                CollectionName: req.body.contaUsuarios.collectionName,
-                CreatedAt: moment().toJSON(),
-                UpdatedAt: null,
-                Enabled: true
+                username: req.body.contaUsuarios.userName,
+                passwordHash: passwordHash,
+                email: req.body.contaUsuarios.email,
+                codigoVerificacao: codeVerification,
+                acessosFalhados: 0,
+                advertencias: 0,
+                ultimoAcesso: null,
+                collectionName: req.body.contaUsuarios.collectionName,
+                contaUsuariosOrganizacaoPai: null,
+                createdAt: moment().toJSON(),
+                updatedAt: null,
+                enabled: true
             }
 
             db.collection('ContaUsuarios')
                 .doc(req.body.contaUsuarios.userName)
                 .set(newAccount)
                 .then(ref => {
-                    console.log('Added document with ID: ', ref.id);
+                    console.log('Criada a conta com o ID: ', req.body.contaUsuarios.userName);
 
                     switch (req.body.contaUsuarios.collectionName) {
                         case 'RedeFarmacias':
-                            redeFarmaciaController.create(req.body.novaFarmacia, req.body.contaUsuarios.userName)
+                            redeFarmaciaController.create(req.body.farmacia, req.body.contaUsuarios.userName)
                             break;
-
+                        case 'OrdemFarmaceuticos':
+                            ordemFarmaceuticosController.create(req.body.ordem, req.body.contaUsuarios.userName)
+                            break;
+                        case 'OrdemEnfermeiros':
+                            ordemEnfermeirosController.create(req.body.ordem, req.body.contaUsuarios.userName)
+                            break;
+                        case 'Enfermeiros':
+                            enfermeirosController.create(req.body.enfermeiro, req.body.contaUsuarios.userName)
+                            break;
+                        case 'Farmaceuticos':
+                            farmaceuticosController.create(req.body.farmaceutico, req.body.contaUsuarios.userName)
+                            break;
+                        case 'ClientesPacientes':
+                            clientePacienteController.create(req.body.clientePaciente, req.body.contaUsuarios.userName)
+                            break;
                         default:
                             break;
                     }

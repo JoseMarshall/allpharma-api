@@ -1,5 +1,4 @@
-const express = require('express')
-const router = express.Router()
+const router = require('express').Router()
 const perfilController = require('../controllers/perfilController')
 
 router.post('/', perfilController.create)

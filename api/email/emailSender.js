@@ -63,9 +63,9 @@ exports.sendEmaiValidationCode = (user, validationCode, link, emailDest) => {
         .then(data => {
             console.log(data);
             fs.appendFileSync(path.join(__dirname, 'sendingSuccessful.txt'),
-                `=========================================================================
-            ${data}
-            =========================================================================`, { encoding: 'utf8' })
+                '=========================================================================' +
+                JSON.stringify(data) +
+                '\n=========================================================================\n', { encoding: 'utf8' })
 
         })
         .catch(err => {
@@ -87,9 +87,9 @@ exports.sendEmailSignUp = (user, pass, emailDest) => {
         .then(data => {
             console.log(data);
             fs.appendFileSync(path.join(__dirname, 'sendingSuccessful.txt'),
-                `=========================================================================
-            ${data}
-            =========================================================================`, { encoding: 'utf8' })
+                '=========================================================================' +
+                JSON.stringify(data) +
+                '=========================================================================\n', { encoding: 'utf8' })
 
         })
         .catch(err => {

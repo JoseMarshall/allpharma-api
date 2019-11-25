@@ -1,29 +1,28 @@
 require('dotenv').config()
 const { db } = require('../../functions/credentials/admin')
-    // {
-    //     "connection": {
-    //         "contaUsuariosId": "",
-    //         "collectionName": ""
-    //     },
-    //     "perfil": {
-    //         "nome": "",
-    //         "menus": [
-    //             {
-    //                 "nome": "",
-    //                 "url": ""
-    //             }
-    //         ]
-    //     }
-    // }
+const moment = require('moment');
+// {
+//     "perfil": {
+//         "nome": "",
+//         "menus": [
+//             {
+//                 "nome": "",
+//                 "url": ""
+//             }
+//         ]
+//     }
+// }
 exports.create = async(req, res, next) => {
 
+    req.body.perfil.updatedAt = null
+    req.body.perfil.createdAt = moment().toJSON()
 
     db
         .collection(req.body.connection.collectionName)
         .doc(req.body.connection.contaUsuariosId)
         .collection('Perfis')
         .doc(req.body.perfil.nome)
-        .set({ Nome: req.body.perfil.nome, Menus: req.body.perfil.menus })
+        .set({ nome: req.body.perfil.nome, menus: req.body.perfil.menus })
         .then(function() {
             console.log(`Perfil ${req.body.perfil.nome} criado com sucesso `);
             return res.status(201).json({ msg: `Perfil ${req.body.perfil.nome} criado com sucesso ` })
@@ -95,7 +94,8 @@ exports.delete = (req, res, next) => {
                     })
                     .catch(next)
             } else {
-                next()
+                return res.status(204).send({ msg: 'Não foi encontrado nenhum registos' })
+
             }
         })
         .catch(next)
