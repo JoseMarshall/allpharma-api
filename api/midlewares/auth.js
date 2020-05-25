@@ -175,7 +175,7 @@ exports.setNewPassword = (req, res, next) => {
                     return res.status(500).send({
                         codigoErro: err.code,
                         erro: err.message,
-                        msg: ':(Ocorreu um erro ao redefenir a senha. Por favor tente mais tarde'
+                        msg: ':( Ocorreu um erro ao redefenir a senha. Por favor tente mais tarde'
                     })
                 })
 
@@ -190,7 +190,7 @@ exports.setNewPassword = (req, res, next) => {
 exports.requestPassword = (req, res, next) => {
 
     db
-        .collection('ContaUsuarios')
+        .collection('ContaUsuarios') 
         .doc(req.body.username)
         .get()
         .then((doc) => {

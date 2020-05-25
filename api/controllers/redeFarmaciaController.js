@@ -30,6 +30,9 @@ const moment = require('moment')
  */
 
 exports.create = (newPharma, Id) => {
+    return res.status(201).send({
+        msg:'Farmacia Criada com sucesso'
+    })
 
     return db
         .collection('RedeFarmacias')

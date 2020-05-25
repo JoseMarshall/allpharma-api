@@ -38,7 +38,7 @@ const stockRouter = require('../api/routes/stock');
 const vendasRouter = require('../api/routes/vendas');
 
 const app = express()
-const port = (parseInt(process.env.PORT) || 3000)
+const port = (parseInt(process.env.PORT) || 4000)
 app.listen(port, () => {
     console.log("Now listening on port " + port);
 })
@@ -50,11 +50,22 @@ setInterval(() => {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header(
+        'Access-Control-Allow-Headers',
+        '*'
+    )
+    if (req.method === 'OPTIONS') {
+        res.header('Access-Control-Allow-Methods', 'PUT, GET, POST , PATCH , DELETE')
+        return res.status(200).json({})
+    }
+    next()
+})
 
 app.get('/', (req, res) => {
     res.status(200).json({
-        msg: 'Welcome to AllPharma, created by JoseM@rshall in Nov/2019',
+        msg: 'Welcome to AllPharma, created by JoseM@rshall in Dec/2019',
         datetime: new Date().toJSON()
     })
 })

@@ -49,13 +49,13 @@ exports.createAccount = async(req, res, next) => {
 
             db.collection('ContaUsuarios')
                 .doc(req.body.contaUsuarios.userName)
-                .set(newAccount)
+                .set(newAccount) 
                 .then(ref => {
                     console.log('Criada a conta com o ID: ', req.body.contaUsuarios.userName);
 
                     switch (req.body.contaUsuarios.collectionName) {
                         case 'RedeFarmacias':
-                            redeFarmaciaController.create(req.body.farmacia, req.body.contaUsuarios.userName)
+                            redeFarmaciaController.create(req.body.redeFarmacia, req.body.contaUsuarios.userName)
                             break;
                         case 'OrdemFarmaceuticos':
                             ordemFarmaceuticosController.create(req.body.ordem, req.body.contaUsuarios.userName)

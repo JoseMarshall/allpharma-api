@@ -54,7 +54,7 @@ const generateNewCredentials = (form) => {
 
 
         if (credentialGenerated === '') {
-            nameTrimed = stringHelper.removeEspecialChars(form.redeFarmacias.proprietario.primeiroNome)
+            nameTrimed = stringHelper.removeEspecialChars(form.objecto.primeiroNome)
             let count = 0
             await
             db

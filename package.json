@@ -16,7 +16,7 @@
     "firebase-admin": "^8.6.1",
     "firebase-functions": "^3.3.0",
     "guid": "^0.0.12",
-    "handlebars": "^4.4.5",
+    "handlebars": "^4.5.3",
     "jshint": "^2.10.2",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
