@@ -3,39 +3,39 @@ const functions = require('firebase-functions')
 
 const express = require('express')
 const bodyParser = require('body-parser')
-const signUp = require('../api/midlewares/signup');
-const redefinePassword = require('../api/midlewares/auth');
-const { checkToken, checkMenuAccess } = require('../api/midlewares/checkToken');
-const emailSender = require('../api/email/emailSender');
+const signUp = require('./midlewares/signup');
+const redefinePassword = require('./midlewares/auth');
+const { checkToken, checkMenuAccess } = require('./midlewares/checkToken');
+const emailSender = require('./email/emailSender');
 
-const redeFarmaciaRouter = require('../api/routes/redeFarmacia');
-const perfilRouter = require('../api/routes/perfil');
-const authRouter = require('../api/routes/auth');
-const farmaciaRouter = require('../api/routes/farmacia');
+const redeFarmaciaRouter = require('./routes/redeFarmacia');
+const perfilRouter = require('./routes/perfil');
+const authRouter = require('./routes/auth');
+const farmaciaRouter = require('./routes/farmacia');
 
-const ajudaPrestadaRouter = require('../api/routes/ajudaPrestada');
-const categoriaProdutoRouter = require('../api/routes/categoriaProduto');
-const clientePacienteRouter = require('../api/routes/clientePaciente');
-const comentarioRouter = require('../api/routes/comentario');
-const comprasProdutoRouter = require('../api/routes/comprasProduto');
-const encomendaRouter = require('../api/routes/encomenda');
-const enfermeiroRouter = require('../api/routes/enfermeiro');
-const farmaceuticoRouter = require('../api/routes/farmaceutico');
-const fornecedorRouter = require('../api/routes/fornecedor');
-const funcionarioRouter = require('../api/routes/funcionario');
-const generoRouter = require('../api/routes/genero');
-const mensagemRouter = require('../api/routes/mensagem');
-const menuRouter = require('../api/routes/menu');
-const ordemEmfermeiroRouter = require('../api/routes/ordemEnfermeiro');
-const ordemFarmaceuticoRouter = require('../api/routes/ordemFarmaceutico');
-const pedidoAjudaRouter = require('../api/routes/pedidoAjuda');
-const pedidoAjudaByClienteRouter = require('../api/routes/pedidoAjudaByCliente');
-const produtoRouter = require('../api/routes/produto');
-const produtoPrateleiraRouter = require('../api/routes/produtoPrateleira');
-const registoTrocoRouter = require('../api/routes/registoTroco');
-const respostaRouter = require('../api/routes/resposta');
-const stockRouter = require('../api/routes/stock');
-const vendasRouter = require('../api/routes/vendas');
+const ajudaPrestadaRouter = require('./routes/ajudaPrestada');
+const categoriaProdutoRouter = require('./routes/categoriaProduto');
+const clientePacienteRouter = require('./routes/clientePaciente');
+const comentarioRouter = require('./routes/comentario');
+const comprasProdutoRouter = require('./routes/comprasProduto');
+const encomendaRouter = require('./routes/encomenda');
+const enfermeiroRouter = require('./routes/enfermeiro');
+const farmaceuticoRouter = require('./routes/farmaceutico');
+const fornecedorRouter = require('./routes/fornecedor');
+const funcionarioRouter = require('./routes/funcionario');
+const generoRouter = require('./routes/genero');
+const mensagemRouter = require('./routes/mensagem');
+const menuRouter = require('./routes/menu');
+const ordemEmfermeiroRouter = require('./routes/ordemEnfermeiro');
+const ordemFarmaceuticoRouter = require('./routes/ordemFarmaceutico');
+const pedidoAjudaRouter = require('./routes/pedidoAjuda');
+const pedidoAjudaByClienteRouter = require('./routes/pedidoAjudaByCliente');
+const produtoRouter = require('./routes/produto');
+const produtoPrateleiraRouter = require('./routes/produtoPrateleira');
+const registoTrocoRouter = require('./routes/registoTroco');
+const respostaRouter = require('./routes/resposta');
+const stockRouter = require('./routes/stock');
+const vendasRouter = require('./routes/vendas');
 
 const app = express()
 const port = (parseInt(process.env.PORT) || 4000)
@@ -44,9 +44,9 @@ app.listen(port, () => {
 })
 
 //Função que a cada hora checa a lista dos emails falhados e tenta o reenvio 
-setInterval(() => {
-    emailSender.resendAllFailedEmail()
-}, 3600000)
+// setInterval(() => {
+//     emailSender.resendAllFailedEmail()
+// }, 3600000)
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

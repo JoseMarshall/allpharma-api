@@ -1,6 +1,7 @@
 {
-    "name": "functions",
-    "description": "Cloud Functions for Firebase",
+    "name": "allpharma",
+  "version": "1.0.0",
+  "description": "Plataforma para gestão de farmácias",
     "scripts": {
         "serve": "firebase serve --only functions",
         "shell": "firebase functions:shell",
@@ -9,11 +10,28 @@
         "logs": "firebase functions:log"
     },
     "engines": {
-        "node": "10"
+        "node": "8"
     },
     "dependencies": {
-        "firebase-admin": "^8.6.0",
-        "firebase-functions": "^3.3.0"
+        "firebase-admin": "^8.12.1",
+        "firebase-functions": "^3.3.0",
+        "@google-cloud/storage": "^4.1.2",
+        "bcrypt": "^3.0.6",
+        "body-parser": "^1.19.0",
+        "busboy": "^0.3.1",
+        "date-utils": "^1.2.21",
+        "dotenv": "^8.2.0",
+        "email-templates": "^6.0.3",
+        "express": "^4.17.1",
+        "firebase": "^7.2.2",
+        "guid": "^0.0.12",
+        "handlebars": "^4.7.6",
+        "jshint": "^2.10.2",
+        "jsonwebtoken": "^8.5.1",
+        "moment": "^2.24.0",
+        "morgan": "^1.9.1",
+        "nodemailer": "^6.3.1",
+        "uuid": "^3.3.3"
     },
     "devDependencies": {
         "firebase-functions-test": "^0.1.6"
