@@ -2,8 +2,6 @@ require('dotenv').config()
 const jwt = require('jsonwebtoken')
 const { db } = require('../credentials/admin')
 
-
-
 exports.checkToken = (req, res, next) => {
     try {
         const incomingToken = req.headers.authorization.split(' ')[1]

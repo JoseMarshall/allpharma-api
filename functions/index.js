@@ -91,7 +91,7 @@ app.use('/enfermeiro', checkToken, enfermeiroRouter) //Falta testar
 app.use('/farmaceutico', checkToken, farmaceuticoRouter) //Falta testar
 app.use('/fornecedor', checkToken, fornecedorRouter) //Falta testar
 app.use('/funcionario', checkToken, funcionarioRouter) //Falta testar
-app.use('/genero', generoRouter) //Falta testar
+app.use('/genero', generoRouter) //All good
 app.use('/mensagem', checkToken, mensagemRouter) //Falta testar
 app.use('/menu', menuRouter) //Falta testar
 app.use('/ordemEnfermeiros', ordemEmfermeiroRouter) //Falta testar
@@ -117,5 +117,5 @@ app.use((err, req, res, next) => {
 });
 
 
-
-exports.api = functions.https.onRequest(app)
+module.exports=app
+//exports.api = functions.https.onRequest(app)

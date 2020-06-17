@@ -6,7 +6,6 @@ const { db } = require('../credentials/admin')
 const emailSender = require('../email/emailSender');
 
 function generateToken(user, res) {
-
     jwt.sign({
             contaUsuariosId: user.contaUsuariosId,
             collectionName: user.collectionName
@@ -15,7 +14,7 @@ function generateToken(user, res) {
 
         (err, token) => {
             if (err) {
-                return res.status(500).send({ error: err.message })
+                return res.status(500).send({ error: 'Error generating token '+err.message })
             } else {
                 return db
                     .collection('ContaUsuarios')
@@ -52,7 +51,7 @@ function generateToken(user, res) {
 }
 
 exports.checkAuth = (req, res, next) => {
-
+    
     db
         .collection('ContaUsuarios')
         .doc(req.body.username)

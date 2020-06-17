@@ -13,7 +13,7 @@ exports.getAll = (req, res, next) => {
         .then(async(snap) => {
             if (!snap.empty) {
                 await snap.docs.map(doc => {
-                    array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/generos/' + doc.id })
+                    array.push({ id: doc.id, data: doc.data()})
                 })
                 return res.status(200).json(array)
             } else {
