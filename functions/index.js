@@ -79,31 +79,31 @@ app.get('/reactivateAccount', redefinePassword.reactivateAccount) //All good
 
 app.use('/redeFarmacia', redeFarmaciaRouter) //All good
 app.use('/perfil', checkToken, perfilRouter) //All good
-app.use('/farmacia', checkToken, farmaciaRouter) //Falta testar
-
-app.use('/ajudaPrestada', checkToken, ajudaPrestadaRouter) //Falta testar
-app.use('/categoriasProduto', checkToken, categoriaProdutoRouter) //Falta testar
-app.use('/clientePaciente', checkToken, clientePacienteRouter) //Falta testar
-app.use('/comentario', checkToken, comentarioRouter) //Falta testar
-app.use('/comprasProduto', checkToken, comprasProdutoRouter) //Falta testar
-app.use('/encomenda', checkToken, encomendaRouter) //Falta testar
-app.use('/enfermeiro', checkToken, enfermeiroRouter) //Falta testar
-app.use('/farmaceutico', checkToken, farmaceuticoRouter) //Falta testar
-app.use('/fornecedor', checkToken, fornecedorRouter) //Falta testar
-app.use('/funcionario', checkToken, funcionarioRouter) //Falta testar
+//app.use(checkToken)
+app.use('/farmacia', farmaciaRouter) //All good
+app.use('/ajudaPrestada', ajudaPrestadaRouter) //Falta testar
+app.use('/categoriasProduto', categoriaProdutoRouter) //Falta testar
+app.use('/clientePaciente', clientePacienteRouter) //Falta testar
+app.use('/comentario', comentarioRouter) //Falta testar
+app.use('/comprasProduto', comprasProdutoRouter) //Falta testar
+app.use('/encomenda', encomendaRouter) //Falta testar
+app.use('/enfermeiro', enfermeiroRouter) //Falta testar
+app.use('/farmaceutico', farmaceuticoRouter) //Falta testar
+app.use('/fornecedor', fornecedorRouter) //Falta testar
+app.use('/funcionario', funcionarioRouter) //Falta testar
 app.use('/genero', generoRouter) //All good
-app.use('/mensagem', checkToken, mensagemRouter) //Falta testar
+app.use('/mensagem', mensagemRouter) //Falta testar
 app.use('/menu', menuRouter) //Falta testar
 app.use('/ordemEnfermeiros', ordemEmfermeiroRouter) //Falta testar
 app.use('/ordemFarmaceuticos', ordemFarmaceuticoRouter) //Falta testar
-app.use('/pedidosAjuda', checkToken, pedidoAjudaRouter) //Falta testar
-app.use('/pedidosAjudaByCliente', checkToken, pedidoAjudaByClienteRouter) //Falta testar
-app.use('/produto', checkToken, produtoRouter) //Falta testar
-app.use('/produtoPrateleira', checkToken, produtoPrateleiraRouter) //Falta testar
-app.use('/registoTroco', checkToken, registoTrocoRouter) //Falta testar
-app.use('/resposta', checkToken, respostaRouter) //Falta testar
-app.use('/stock', checkToken, stockRouter) //Falta testar
-app.use('/vendas', checkToken, vendasRouter) //Falta testar
+app.use('/pedidosAjuda', pedidoAjudaRouter) //Falta testar
+app.use('/pedidosAjudaByCliente', pedidoAjudaByClienteRouter) //Falta testar
+app.use('/produto', produtoRouter) //Falta testar
+app.use('/produtoPrateleira', produtoPrateleiraRouter) //Falta testar
+app.use('/registoTroco', registoTrocoRouter) //Falta testar
+app.use('/resposta', respostaRouter) //Falta testar
+app.use('/stock', stockRouter) //Falta testar
+app.use('/vendas', vendasRouter) //Falta testar
 
 
 //Midleware padrão dos erros

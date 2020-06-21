@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config({path:'../'})
 const { db, admin, config } = require('../credentials/admin')
 const moment = require('moment');
 
@@ -27,12 +27,12 @@ exports.create = async(req, res, next) => {
 
     req.body.farmacia.updatedAt = null
     req.body.farmacia.createdAt = moment().toJSON()
+    req.body.farmacia.redeFarmaciaId = req.body.connection.contaUsuariosId
 
     let img = {
-        perfil: "https://firebasestorage.googleapis.com/v0/b/allpharma-e8f00.appspot.com/o/blankProfile.png?alt=media",
+        imageProfile: "https://firebasestorage.googleapis.com/v0/b/allpharma-e8f00.appspot.com/o/blankProfile.png?alt=media",
         uploads: []
     }
-
 
     db
         .collection(req.body.connection.collectionName)
@@ -85,21 +85,21 @@ exports.getOne = (req, res, next) => {
         .collection('Farmacias')
         .doc(req.params.id)
         .get()
-        .then(doc => {
+        .then(async(doc) => {
             if (doc.exists) {
-                let imagemProfile;
-                doc.ref
-                    .collection('Imagens')
-                    .get()
-                    .then((snap) => {
-                        if (!snap.empty) {
-                            const { perfil, uploads } = snap.docs[0].data()
-                            return doc.ref
-                                .collection('Comentarios')
-                                .get()
-                                .then((snapComent) => {
-                                    if (!snapComent.empty) {
-                                        let comentarios = []
+                let imageProfile='', uploads=[];
+                const comentarios = []
+                await doc.ref
+                        .collection('Imagens')
+                        .get()
+                        .then((snap) => {
+                            if (!snap.empty) {
+                                imageProfile = snap.docs[0].data().imageProfile
+                                uploads = snap.docs[0].data().uploads
+                                return doc.ref
+                                    .collection('Comentarios')
+                                    .get()
+                                    .then((snapComent) => { 
                                         snapComent.docs.forEach((c) => {
                                             let obj = {
                                                 id: c.id,
@@ -121,26 +121,23 @@ exports.getOne = (req, res, next) => {
                                                     }
                                                 })
                                             comentarios.push(obj)
-                                        })
-                                        console.log(doc.data());
-                                        return res.status(200).json({
-                                            farmacia: {
-                                                ...doc.data(),
-                                                imagens: { perfil, uploads },
-                                                comentarios: comentarios
-                                            },
-                                        })
-                                    }
-                                })
+                                        })                                  
+                                        
+                                    })
+                                        
+                            } 
 
-                        } else {
-                            return res.status(500).json({ msg: 'Ocorreu um erro a localizar a imagem de perfil da farmacia' })
-                        }
-
-                    })
-                    .catch(next)
+                        })
+                        .catch(next)
+                return res.status(200).json({
+                    farmacia: {
+                        ...doc.data(),
+                        imagens: { imageProfile, uploads },
+                        comentarios
+                    },
+                })
             } else {
-                return res.status(204).json({ msg: 'Esta Farmácia não foi encontrado' })
+                return res.status(404).json({ msg: 'Esta Farmácia não foi encontrado' })
             }
         })
         .catch(next)
@@ -155,15 +152,13 @@ exports.getAll = (req, res, next) => {
         .collection('Farmacias')
         .get()
         .then(async(snap) => {
-            if (!snap.empty) {
-                await snap.forEach((doc) => {
-                    array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/farmacia/' + doc.id })
-                    console.log({ id: doc.id, data: doc.data() });
-                })
-                return res.status(200).json(array)
-            } else {
-                return res.status(204).send({ msg: 'Não foi encontrado nenhuma farmácia' })
-            }
+            
+            await snap.forEach((doc) => {
+                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/farmacia/' + doc.id })
+                console.log({ id: doc.id, data: doc.data() });
+            })
+            return res.status(200).json(array)
+            
         })
         .catch(next)
 
@@ -185,7 +180,7 @@ exports.delete = (req, res, next) => {
                     })
                     .catch(next)
             } else {
-                return res.status(204).send({ msg: 'Não foi encontrado nenhum registos' })
+                return res.status(404).send({ msg: 'Não foi encontrado nenhum registos' })
 
             }
         })
@@ -222,9 +217,6 @@ exports.update = (req, res, next) => {
 
 }
 
-
-
-
 exports.getOneEncomenda = (req, res, next) => {
     db
         .collection('RedeFarmacias')
@@ -240,7 +232,7 @@ exports.getOneEncomenda = (req, res, next) => {
                 return res.status(200).json(doc.data())
 
             } else {
-                return res.status(204).json({ msg: 'Esta encomenda não foi encontrada' })
+                return res.status(200).json({ msg: 'Esta encomenda não foi encontrada' })
             }
         })
         .catch(next)
@@ -256,19 +248,17 @@ exports.getAllEncomenda = (req, res, next) => {
         .collection('Encomendas')
         .get()
         .then(snap => {
-            if (!snap.empty) {
-                snap.docs.map(doc => {
-                    array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/farmacia/encomenda/' + doc.id })
-                    console.log({
-                        id: doc.id,
-                        data: doc.data()
-                    });
+            
+            snap.docs.map(doc => {
+                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/farmacia/encomenda/' + doc.id })
+                console.log({
+                    id: doc.id,
+                    data: doc.data()
+                });
 
-                })
-                return res.status(200).json(array)
-            } else {
-                return res.status(204).send({ msg: 'Não foi encontrado nenhuma encomenda' })
-            }
+            })
+            return res.status(200).json(array)
+            
         })
         .catch(next)
 
@@ -335,7 +325,7 @@ exports.updateEncomenda = (req, res, next) => {
                     ...req.body.encomenda,
                     updatedAt: moment().toJSON()
                 })
-            return res.status(200).json({ msg: 'Deleted Successfully', result })
+            return res.status(200).json({ msg: 'Updated Successfully', result })
         })
         .catch(next)
 
@@ -410,8 +400,6 @@ exports.setImageProfile = (req, res, next) => {
     busboy.end(req.rawBody)
 
 }
-
-
 
 exports.uploadImage = (req, res, next) => {
 

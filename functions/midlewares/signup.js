@@ -81,9 +81,7 @@ exports.createAccount = async(req, res, next) => {
                         req.body.contaUsuarios.email)
 
                     return res.status(201).json({
-                        msg: 'Conta criada com sucesso, por favor verifique a caixa de entrada do seu e-mail se recebeu as credenciais de acesso, pode demorar até 1 hora',
-                        password: req.body.contaUsuarios.password, //ELIMINAR ESTA KEY
-                        userName: req.body.contaUsuarios.userName //ELIMINAR ESTA KEY
+                        msg: 'Conta criada com sucesso, por favor verifique a caixa de entrada do seu e-mail se recebeu as credenciais de acesso, pode demorar até 1 hora'
                     })
 
                 })

@@ -134,14 +134,11 @@ exports.create = async(req, res, next) => {
                                 .collection('Funcionarios')
                                 .doc(req.body.contaUsuarios.userName)
                                 .set(req.body.funcionario)
-
-
-
-                            return res.status(201).json({
-                                msg: `Funcionario ${req.body.funcionario.nome} criado com sucesso `,
-                                password: req.body.contaUsuarios.password, //ELIMINAR ESTA KEY
-                                userName: req.body.contaUsuarios.userName //ELIMINAR ESTA KEY
-                            })
+                                .then(()=>{
+                                    return res.status(201).json({
+                                        msg: `Funcionario ${req.body.funcionario.nome} criado com sucesso `
+                                    })
+                                })
 
                         })
                         .catch(function(error) {
