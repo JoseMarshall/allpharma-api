@@ -46,13 +46,11 @@ exports.create = async(newFarmaceutico, Id) => {
                 })
                 .then(() => {
                     console.log(`Farmaceutico ${newFarmaceutico.nome.completo} criado com sucesso `);
-                    return res.status(201).json({ msg: `Farmaceutico ${newFarmaceutico.nome.completo} criado com sucesso ` })
                 })
 
         })
         .catch(function(error) {
             console.error(`Falha ao cadastrar Farmaceutico ${newFarmaceutico.nome.completo} à Ordem de Farmaceuticos`, error.message);
-            return res.status(500).json({ msg: error.message })
         });
 
 

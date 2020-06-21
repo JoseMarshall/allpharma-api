@@ -31,6 +31,7 @@ function generateToken(user, res) {
 
                         return res.status(200).send({
                             token: 'Bearer ' + token,
+                            link:process.env.URL_ROOT,
                             msg: 'login successfull, verifique o token enviado'
                         })
                     })
@@ -54,7 +55,7 @@ exports.checkAuth = (req, res, next) => {
     
     db
         .collection('ContaUsuarios')
-        .doc(req.body.username)
+        .doc(req.body.username||req.query.username)
         .get()
         .then((doc) => {
             if (doc.exists) {
@@ -67,23 +68,23 @@ exports.checkAuth = (req, res, next) => {
                 } = doc.data()
 
                 if (enabled) {
-                    bcrypt.compare(req.body.password, passwordHash).then(result => {
+                    bcrypt.compare(req.body.password||req.query.password, passwordHash).then(result => {
                         if (result) {
-                            if (ultimoAcesso === null) {
-                                return res.status(307).send({
-                                        msg: 'Por favor redefina a sua palavra-passe',
-                                        username: req.body.username,
-                                        passwordHash: passwordHash,
-                                        link: process.env.LINK_RECUPERACAO_SENHA
-                                    }) //O link para a redefinição de senha
+                            //if (ultimoAcesso === null) {
+                                // return res.status(307).send({
+                                //         msg: 'Por favor redefina a sua palavra-passe',
+                                //         username: req.body.username,
+                                //         passwordHash: passwordHash,
+                                //         link: process.env.LINK_RECUPERACAO_SENHA
+                                //     }) //O link para a redefinição de senha
 
-                            } else {
+                            //} else {
                                 let user = {
                                     contaUsuariosId: doc.id,
                                     collectionName
                                 }
                                 return generateToken(user, res)
-                            }
+                           // }
                         } else {
 
                             doc.ref

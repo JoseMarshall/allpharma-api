@@ -16,7 +16,7 @@ const moment = require('moment');
 //     "DataNascimento": "",
 //     "Endereco": {
 //         "Provincia": "",
-//         "Municipio": "",
+//         "Municipio": "", 
 //         "Bairro": "",
 //         "Rua": "",
 //         "Andar": "",
@@ -49,7 +49,6 @@ exports.create = async(newCliente, Id) => {
         })
         .then(() => {
             console.log(`Usuário ${newCliente.nome.completo} criado com sucesso `);
-            return res.status(201).json({ msg: `Usuário ${newCliente.nome.completo} criado com sucesso ` })
         })
 
 }

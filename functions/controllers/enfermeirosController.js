@@ -43,13 +43,12 @@ exports.create = async(newEnfermeiro, Id) => {
                 })
                 .then(() => {
                     console.log(`Enfermeiro ${newEnfermeiro.nome.completo} criado com sucesso `);
-                    return res.status(201).json({ msg: `Enfermeiro ${newEnfermeiro.nome.completo} criado com sucesso ` })
+                   
                 })
 
         })
         .catch(function(error) {
             console.error(`Falha ao cadastrar enfermeiro ${newEnfermeiro.nome.completo} à Ordem de Enfermeiros`, error.message);
-            return res.status(500).json({ msg: error.message })
         });
 
 
