@@ -67,30 +67,25 @@ exports.getOne = (req, res, next) => {
                     .collection('PedidosAjuda')
                     .get()
                     .then(async(snapAjudas) => {
-                        if (!snapAjudas.empty) {
-                            await snapAjudas.docs.forEach((a) => {
-                                ajudas.push({
-                                    id: a.id,
-                                    ...a.data()
-                                })
+                        
+                        await snapAjudas.docs.forEach((a) => {
+                            ajudas.push({
+                                id: a.id,
+                                ...a.data()
                             })
-
-                        }
+                        })
                     })
                     .then(() => {
                         return doc.ref
                             .collection('Encomendas')
                             .get()
-                            .then(async(snapEncomendas) => {
-                                if (!snapEncomendas.empty) {
-                                    await snapEncomendas.docs.forEach((e) => {
-                                        encomendas.push({
-                                            id: e.id,
-                                            ...e.data()
-                                        })
+                            .then(async(snapEncomendas) => {                                
+                                await snapEncomendas.docs.forEach((e) => {
+                                    encomendas.push({
+                                        id: e.id,
+                                        ...e.data()
                                     })
-
-                                }
+                                })                                
                             })
 
                     })
@@ -107,7 +102,7 @@ exports.getOne = (req, res, next) => {
                     .catch(next)
 
             } else {
-                return res.status(204).json({ msg: 'Este clientePaciente não foi encontrado' })
+                return res.status(404).json({ msg: 'Este clientePaciente não foi encontrado' })
             }
         })
         .catch(next)
@@ -120,15 +115,13 @@ exports.getAll = (req, res, next) => {
         .collection('ClientesPacientes')
         .get()
         .then(async(snap) => {
-            if (!snap.empty) {
-                await snap.forEach((doc) => {
-                    array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/clientePaciente/' + doc.id })
-                    console.log({ id: doc.id, data: doc.data() });
-                })
-                return res.status(200).json(array)
-            } else {
-                return res.status(204).send({ msg: 'Não foi encontrado nenhum clientePaciente' })
-            }
+           
+            await snap.forEach((doc) => {
+                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/clientePaciente/' + doc.id })
+                console.log({ id: doc.id, data: doc.data() });
+            })
+            return res.status(200).json(array)
+           
         })
         .catch(next)
 
@@ -185,8 +178,6 @@ exports.update = (req, res, next) => {
         .catch(next)
 
 }
-
-
 
 exports.setImageProfile = (req, res, next) => {
 

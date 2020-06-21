@@ -44,9 +44,9 @@ app.listen(port, () => {
 })
 
 //Função que a cada hora checa a lista dos emails falhados e tenta o reenvio 
-// setInterval(() => {
-//     emailSender.resendAllFailedEmail()
-// }, 3600000)
+setInterval(() => {
+    emailSender.resendAllFailedEmail()
+}, 3600000)
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -79,23 +79,23 @@ app.get('/reactivateAccount', redefinePassword.reactivateAccount) //All good
 
 app.use('/redeFarmacia', redeFarmaciaRouter) //All good
 app.use('/perfil', checkToken, perfilRouter) //All good
-//app.use(checkToken)
+app.use(checkToken)
 app.use('/farmacia', farmaciaRouter) //All good
-//app.use('/ajudaPrestada', ajudaPrestadaRouter) //Dont remember what is it for
+app.use('/ajudaPrestada', ajudaPrestadaRouter) //Dont remember what is it for
 app.use('/categoriasProduto', categoriaProdutoRouter) //All good
-app.use('/clientePaciente', clientePacienteRouter) //Falta testar
+app.use('/clientePaciente', clientePacienteRouter) //All good
 app.use('/comentario', comentarioRouter) //Falta testar
 app.use('/comprasProduto', comprasProdutoRouter) //Falta testar
 app.use('/encomenda', encomendaRouter) //Falta testar
-//app.use('/enfermeiro', enfermeiroRouter) //Falta testar
+app.use('/enfermeiro', enfermeiroRouter) //Falta testar
 app.use('/farmaceutico', farmaceuticoRouter) //Falta testar
 app.use('/fornecedor', fornecedorRouter) //Falta testar
 app.use('/funcionario', funcionarioRouter) //Falta testar
 app.use('/genero', generoRouter) //All good
 app.use('/mensagem', mensagemRouter) //Falta testar
 app.use('/menu', menuRouter) //Falta testar
-//app.use('/ordemEnfermeiros', ordemEmfermeiroRouter) //Falta testar
-//app.use('/ordemFarmaceuticos', ordemFarmaceuticoRouter) //Falta testar
+app.use('/ordemEnfermeiros', ordemEmfermeiroRouter) //Falta testar
+app.use('/ordemFarmaceuticos', ordemFarmaceuticoRouter) //Falta testar
 app.use('/pedidosAjuda', pedidoAjudaRouter) //Falta testar
 app.use('/pedidosAjudaByCliente', pedidoAjudaByClienteRouter) //Falta testar
 app.use('/produto', produtoRouter) //Falta testar
@@ -117,5 +117,5 @@ app.use((err, req, res, next) => {
 });
 
 
-module.exports=app
-//exports.api = functions.https.onRequest(app)
+//module.exports=app
+exports.api = functions.https.onRequest(app)

@@ -76,23 +76,21 @@ exports.getAll = (req, res, next) => {
         .collection('CategoriasProduto')
         .get()
         .then(snap => {
-            if (!snap.empty) {
-                snap.docs.map(doc => {
-                    doc.ref.collection('Produtos')
-                        .get()
-                        .then(p => {
-                            if (!p.empty) {
-                                p.forEach(produto => {
-                                    produtos.push({ id: produto.id, data: produto.data(), link: process.env.URL_ROOT + '/produto/' + doc.id })
-                                    console.log({ id: produto.id, data: produto.data() });
-                                })
-                            }
-                        })
-                })
-                return res.status(200).json(produtos)
-            } else {
-                return res.status(204).send({ msg: 'Não foi encontrado nenhum produto' })
-            }
+            
+            snap.docs.map(doc => {
+                doc.ref.collection('Produtos')
+                    .get()
+                    .then(p => {
+                        if (!p.empty) {
+                            p.forEach(produto => {
+                                produtos.push({ id: produto.id, data: produto.data(), link: process.env.URL_ROOT + '/produto/' + doc.id })
+                                console.log({ id: produto.id, data: produto.data() });
+                            })
+                        }
+                    })
+            })
+            return res.status(200).json(produtos)
+            
         })
         .catch(next)
 

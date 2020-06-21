@@ -63,18 +63,18 @@ describe('categoria Produto Controller', () => {
     //     expect(res.status).toBe(200)
     // });
 
-    it('should update a specific product category on database depending on the object sent', async() => {
-        const res = await   request(app).put('/KjjjyLxNiHCTl1baLNNf').send({
-            "connection" : {
-                "collectionName":"RedeFarmacias",
-                "contaUsuariosId": "Lucas"
-            },
-            "categoria":{
-                "nome":"Anabolizantes"
-            }
-        })
-        expect(res.status).toBe(201)
-    });
+    // it('should update a specific product category on database depending on the object sent', async() => {
+    //     const res = await   request(app).put('/KjjjyLxNiHCTl1baLNNf').send({
+    //         "connection" : {
+    //             "collectionName":"RedeFarmacias",
+    //             "contaUsuariosId": "Lucas"
+    //         },
+    //         "categoria":{
+    //             "nome":"Anabolizantes"
+    //         }
+    //     })
+    //     expect(res.status).toBe(201)
+    // });
 
 
 });
