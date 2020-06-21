@@ -14,8 +14,7 @@ exports.create = async(req, res, next) => {
         .collection(req.body.connection.collectionName)
         .doc(req.body.connection.contaUsuariosId)
         .collection('CategoriasProduto')
-        .doc(req.body.categoriaProduto.nome)
-        .set({ Nome: req.body.categoriaProduto.nome })
+        .add({ nome: req.body.categoriaProduto.nome })
         .then(function() {
             console.log(`Categoria ${req.body.categoriaProduto.nome} criada com sucesso `);
             return res.status(201).json({ msg: `Categoria ${req.body.categoriaProduto.nome} criada com sucesso ` })
@@ -42,7 +41,7 @@ exports.getOne = (req, res, next) => {
                 return res.status(200).json(doc.data())
 
             } else {
-                return res.status(204).json({ msg: 'Esta categoria não foi encontrada' })
+                return res.status(200).json({ msg: 'Esta categoria não foi encontrada' })
             }
         })
         .catch(next)
@@ -57,15 +56,11 @@ exports.getAll = (req, res, next) => {
         .collection('CategoriasProduto')
         .get()
         .then(snap => {
-            if (!snap.empty) {
-                snap.docs.map(doc => {
-                    categorias.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/categoriasProduto/' + doc.id })
-                    console.log({ id: doc.id, data: doc.data() });
-                })
-                return res.status(200).json(categorias)
-            } else {
-                return res.status(204).send({ msg: 'Não foi encontrado nenhum perfil' })
-            }
+            snap.docs.map(doc => {
+                categorias.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/categoriasProduto/' + doc.id })
+                console.log({ id: doc.id, data: doc.data() });
+            })
+            return res.status(200).json(categorias)            
         })
         .catch(next)
 
@@ -87,7 +82,7 @@ exports.delete = (req, res, next) => {
                     })
                     .catch(next)
             } else {
-                return res.status(204).send({ msg: 'Não foi encontrado nenhum registos' })
+                return res.status(404).send({ msg: 'Não foi encontrado nenhum registos' })
 
             }
         })
@@ -106,6 +101,7 @@ exports.update = (req, res, next) => {
             if (doc.exists) {
                 doc.ref.update(req.body.categoria)
                     .then((result) => {
+                        doc.ref.id = req.body.categoria.nome
                         res.status(201).send({
                             msg: 'Updated Successfuly',
                             result,
