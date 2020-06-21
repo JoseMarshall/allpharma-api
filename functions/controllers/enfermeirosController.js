@@ -93,7 +93,7 @@ exports.getOne = (req, res, next) => {
                     .catch(next)
 
             } else {
-                return res.status(204).json({ msg: 'Este enfermeiro não foi encontrado' })
+                return res.status(404).json({ msg: 'Este enfermeiro não foi encontrado' })
             }
         })
         .catch(next)
@@ -106,15 +106,13 @@ exports.getAll = (req, res, next) => {
         .collection('Enfermeiros')
         .get()
         .then(async(snap) => {
-            if (!snap.empty) {
-                await snap.forEach((doc) => {
-                    array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/enfermeiro/' + doc.id })
-                    console.log({ id: doc.id, data: doc.data() });
-                })
-                return res.status(200).json(array)
-            } else {
-                return res.status(204).send({ msg: 'Não foi encontrado nenhum enfermeiro' })
-            }
+            
+            await snap.forEach((doc) => {
+                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/enfermeiro/' + doc.id })
+                console.log({ id: doc.id, data: doc.data() });
+            })
+            return res.status(200).json(array)
+          
         })
         .catch(next)
 

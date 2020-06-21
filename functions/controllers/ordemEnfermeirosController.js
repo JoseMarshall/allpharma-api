@@ -72,7 +72,7 @@ exports.getOne = (req, res, next) => {
                     })
 
             } else {
-                return res.status(204).json({ msg: 'A Ordem de enfermeiros não foi encontrada' })
+                return res.status(404).json({ msg: 'A Ordem de enfermeiros não foi encontrada' })
             }
         })
         .catch(next)

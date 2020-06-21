@@ -49,7 +49,7 @@ exports.getOne = (req, res, next) => {
                 return res.status(200).json(doc.data())
 
             } else {
-                return res.status(204).json({ msg: 'Este perfil não foi encontrado' })
+                return res.status(404).json({ msg: 'Este perfil não foi encontrado' })
             }
         })
         .catch(next)
@@ -63,16 +63,13 @@ exports.getAll = (req, res, next) => {
         .doc(req.body.connection.contaUsuariosId)
         .collection('Perfis')
         .get()
-        .then(snap => {
-            if (!snap.empty) {
-                snap.docs.map(doc => {
-                    perfis.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/perfil/' + doc.id })
-                    console.log({ id: doc.id, data: doc.data() });
-                })
-                return res.status(200).json(perfis)
-            } else {
-                return res.status(204).send({ msg: 'Não foi encontrado nenhum perfil' })
-            }
+        .then(async(snap) => {
+            await snap.docs.map(doc => {
+                perfis.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/perfil/' + doc.id })
+                console.log({ id: doc.id, data: doc.data() });
+            })
+            return res.status(200).json(perfis)
+            
         })
         .catch(next)
 

@@ -41,7 +41,7 @@ exports.getOne = (req, res, next) => {
                 return res.status(200).json(doc.data())
 
             } else {
-                return res.status(200).json({ msg: 'Esta categoria não foi encontrada' })
+                return res.status(404).json({ msg: 'Esta categoria não foi encontrada' })
             }
         })
         .catch(next)

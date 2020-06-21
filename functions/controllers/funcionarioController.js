@@ -2,6 +2,7 @@ require('dotenv').config()
 const { db } = require('../credentials/admin')
 const CheckerController = require('../midlewares/checker')
 const moment = require('moment');
+const emailSender = require("../email/emailSender");
 
 // "Funcionarios": [{
 //         "NumIdentificacao": "",
@@ -118,9 +119,9 @@ exports.create = async(req, res, next) => {
                         .then(function() {
                             console.log(`Funcionario ${req.body.funcionario.nome} criado com sucesso `);
 
-                            // emailSender.sendEmailSignUp(req.body.contaUsuarios.userName,
-                            //     req.body.contaUsuarios.password,
-                            //     req.body.contaUsuarios.email)
+                            emailSender.sendEmailSignUp(req.body.contaUsuarios.userName,
+                                req.body.contaUsuarios.password,
+                                req.body.contaUsuarios.email)
 
                             //Regista na coleção funcionarios que esta dentro da coleção farmacias
                             delete req.body.funcionario.menus
@@ -175,7 +176,7 @@ exports.getOne = (req, res, next) => {
                 return res.status(200).json(doc.data())
 
             } else {
-                return res.status(204).json({ msg: 'Este Funcionario não foi encontrado' })
+                return res.status(404).json({ msg: 'Este Funcionario não foi encontrado' })
             }
         })
         .catch(next)
@@ -189,17 +190,15 @@ exports.getAll = (req, res, next) => {
         .doc(req.body.connection.contaUsuariosId)
         .collection('FuncionariosFarmacia')
         .get()
-        .then(snap => {
-            if (!snap.empty) {
-                snap.docs.map(doc => {
+        .then(async(snap) => {
+            
+                await snap.docs.map(doc => {
                     array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/funcionariosFarmacia/' + doc.id })
                     console.log({ id: doc.id, data: doc.data() });
                 })
 
                 return res.status(200).json(array)
-            } else {
-                return res.status(204).send({ msg: 'Não foi encontrado nenhum Funcionário' })
-            }
+            
         })
         .catch(next)
 

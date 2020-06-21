@@ -116,7 +116,7 @@ exports.getOne = (req, res, next) => {
                 return res.status(200).json(doc.data())
 
             } else {
-                return res.status(204).json({ msg: 'Esta encomenda não foi encontrada' })
+                return res.status(404).json({ msg: 'Esta encomenda não foi encontrada' })
             }
         })
         .catch(next)
@@ -130,19 +130,17 @@ exports.getAll = (req, res, next) => {
         .collection('Encomendas')
         .get()
         .then(snap => {
-            if (!snap.empty) {
-                snap.docs.map(doc => {
-                    array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/encomenda/' + doc.id })
-                    console.log({
-                        id: doc.id,
-                        data: doc.data()
-                    });
+           
+            snap.docs.map(doc => {
+                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/encomenda/' + doc.id })
+                console.log({
+                    id: doc.id,
+                    data: doc.data()
+                });
 
-                })
-                return res.status(200).json(array)
-            } else {
-                return res.status(204).send({ msg: 'Não foi encontrado nenhuma encomenda' })
-            }
+            })
+            return res.status(200).json(array)
+            
         })
         .catch(next)
 

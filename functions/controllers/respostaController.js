@@ -55,17 +55,15 @@ exports.getAll = (req, res, next) => {
         .doc(req.params.id)
         .collection('Respostas')
         .get()
-        .then(snap => {
-            if (!snap.empty) {
-                snap.docs.map(doc => {
-                    array.push({ id: doc.id, data: doc.data() })
-                    console.log({ id: doc.id, data: doc.data() });
-                })
+        .then(async(snap) => {
+            
+            await snap.docs.map(doc => {
+                array.push({ id: doc.id, data: doc.data() })
+                console.log({ id: doc.id, data: doc.data() });
+            })
 
-                return res.status(200).json(array)
-            } else {
-                return res.status(204).send({ msg: 'Não foi encontrado nenhum registo' })
-            }
+            return res.status(200).json(array)
+            
         })
         .catch(next)
 

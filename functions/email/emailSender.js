@@ -79,7 +79,7 @@ exports.sendEmailSignUp = (user, pass, emailDest) => {
     const context = {
         userName: user,
         password: pass,
-        link: `${process.env.URL_ROOT}/auth?username=${user}&password=${pass}`
+        link: `${process.env.FRONT_END}/auth?username=${user}&password=${pass}`
     };
     const HTML = loadTemplate('credentials.hbs', context); //O html que irá no corpo do e-amil
     console.log('Trying to send email to: ' + emailDest);

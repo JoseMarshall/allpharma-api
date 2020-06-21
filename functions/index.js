@@ -70,20 +70,22 @@ app.get('/', (req, res) => {
     })
 })
 
-app.use('/auth', authRouter) //All good
-app.post('/signup', signUp.createAccount) //All good 
+app.use('/auth', authRouter) 
+app.post('/signup', signUp.createAccount)  
 
-app.post('/redefinePassword', redefinePassword.setNewPassword) //All good
-app.post('/requestPassword', redefinePassword.requestPassword) //All good
-app.get('/reactivateAccount', redefinePassword.reactivateAccount) //All good
+app.post('/redefinePassword', redefinePassword.setNewPassword) 
+app.post('/requestPassword', redefinePassword.requestPassword) 
+app.get('/reactivateAccount', redefinePassword.reactivateAccount) 
 
-app.use('/redeFarmacia', redeFarmaciaRouter) //All good
-app.use('/perfil', checkToken, perfilRouter) //All good
+app.use('/redeFarmacia', redeFarmaciaRouter) 
+app.use('/genero', generoRouter) 
+app.use('/menu', menuRouter)
 app.use(checkToken)
-app.use('/farmacia', farmaciaRouter) //All good
+app.use('/perfil', perfilRouter) 
+app.use('/farmacia', farmaciaRouter) 
 app.use('/ajudaPrestada', ajudaPrestadaRouter) //Dont remember what is it for
-app.use('/categoriasProduto', categoriaProdutoRouter) //All good
-app.use('/clientePaciente', clientePacienteRouter) //All good
+app.use('/categoriasProduto', categoriaProdutoRouter) 
+app.use('/clientePaciente', clientePacienteRouter) 
 app.use('/comentario', comentarioRouter) //Falta testar
 app.use('/comprasProduto', comprasProdutoRouter) //Falta testar
 app.use('/encomenda', encomendaRouter) //Falta testar
@@ -91,9 +93,7 @@ app.use('/enfermeiro', enfermeiroRouter) //Falta testar
 app.use('/farmaceutico', farmaceuticoRouter) //Falta testar
 app.use('/fornecedor', fornecedorRouter) //Falta testar
 app.use('/funcionario', funcionarioRouter) //Falta testar
-app.use('/genero', generoRouter) //All good
 app.use('/mensagem', mensagemRouter) //Falta testar
-app.use('/menu', menuRouter) //Falta testar
 app.use('/ordemEnfermeiros', ordemEmfermeiroRouter) //Falta testar
 app.use('/ordemFarmaceuticos', ordemFarmaceuticoRouter) //Falta testar
 app.use('/pedidosAjuda', pedidoAjudaRouter) //Falta testar
@@ -109,7 +109,7 @@ app.use('/vendas', vendasRouter) //Falta testar
 //Midleware padrão dos erros
 app.use((err, req, res, next) => {
 
-    return res.status(404).json({
+    return res.status(500).json({
         msg: 'Something went bad',
         erro: err.message
     })

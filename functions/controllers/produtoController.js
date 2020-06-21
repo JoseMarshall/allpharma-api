@@ -75,21 +75,20 @@ exports.getAll = (req, res, next) => {
         .doc(req.body.connection.contaUsuariosId)
         .collection('CategoriasProduto')
         .get()
-        .then(snap => {
-            
+        .then(snap => {            
             snap.docs.map(doc => {
                 doc.ref.collection('Produtos')
                     .get()
-                    .then(p => {
-                        if (!p.empty) {
-                            p.forEach(produto => {
+                    .then(async(p) => {
+                        
+                            await p.forEach(produto => {
                                 produtos.push({ id: produto.id, data: produto.data(), link: process.env.URL_ROOT + '/produto/' + doc.id })
                                 console.log({ id: produto.id, data: produto.data() });
                             })
-                        }
+                        
+                            return res.status(200).json(produtos)
                     })
             })
-            return res.status(200).json(produtos)
             
         })
         .catch(next)

@@ -92,7 +92,7 @@ exports.getOne = (req, res, next) => {
                 return res.status(200).json(doc.data())
 
             } else {
-                return res.status(204).json({ msg: 'Este regiso não foi encontrado' })
+                return res.status(404).json({ msg: 'Este regiso não foi encontrado' })
             }
         })
         .catch(next)
@@ -108,17 +108,14 @@ exports.getAll = (req, res, next) => {
         .doc(req.body.farmacia.farmaciaId)
         .collection('ProdutosPrateleira')
         .get()
-        .then(snap => {
-            if (!snap.empty) {
-                snap.docs.map(doc => {
-                    array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/produtosPrateleira/' + doc.id })
-                    console.log({ id: doc.id, data: doc.data() });
-                })
+        .then(async(snap) => {
+            await snap.docs.map(doc => {
+                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/produtosPrateleira/' + doc.id })
+                console.log({ id: doc.id, data: doc.data() });
+            })
 
-                return res.status(200).json(array)
-            } else {
-                return res.status(204).send({ msg: 'Não foi encontrado nenhum registo' })
-            }
+            return res.status(200).json(array)
+            
         })
         .catch(next)
 

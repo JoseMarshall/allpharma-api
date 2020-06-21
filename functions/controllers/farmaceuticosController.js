@@ -95,7 +95,7 @@ exports.getOne = (req, res, next) => {
                     .catch(next)
 
             } else {
-                return res.status(204).json({ msg: 'Este farmaceutico não foi encontrado' })
+                return res.status(404).json({ msg: 'Este farmaceutico não foi encontrado' })
             }
         })
         .catch(next)
@@ -108,15 +108,13 @@ exports.getAll = (req, res, next) => {
         .collection('Farmaceuticos')
         .get()
         .then(async(snap) => {
-            if (!snap.empty) {
-                await snap.forEach((doc) => {
-                    array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/farmaceutico/' + doc.id })
-                    console.log({ id: doc.id, data: doc.data() });
-                })
-                return res.status(200).json(array)
-            } else {
-                return res.status(204).send({ msg: 'Não foi encontrado nenhum farmaceutico' })
-            }
+            
+            await snap.forEach((doc) => {
+                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/farmaceutico/' + doc.id })
+                console.log({ id: doc.id, data: doc.data() });
+            })
+            return res.status(200).json(array)
+           
         })
         .catch(next)
 

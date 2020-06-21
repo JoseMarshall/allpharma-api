@@ -39,7 +39,7 @@ exports.getOne = (req, res, next) => {
                 return res.status(200).json(doc.data())
 
             } else {
-                return res.status(204).json({ msg: 'Esta mensagem não foi encontrada' })
+                return res.status(404).json({ msg: 'Esta mensagem não foi encontrada' })
             }
         })
         .catch(next)
@@ -52,16 +52,14 @@ exports.getAll = (req, res, next) => {
         .collection('Mensagens')
         .where('to', '==', req.body.connection.contaUsuariosId)
         .get()
-        .then(snap => {
-            if (!snap.empty) {
-                snap.docs.map(doc => {
-                    array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/mensagens/' + doc.id })
-                    console.log({ id: doc.id, data: doc.data() });
-                })
-                return res.status(200).json(array)
-            } else {
-                return res.status(204).send({ msg: 'Não foi encontrado nenhuma mensagem' })
-            }
+        .then(async(snap) => {
+            
+            await snap.docs.map(doc => {
+                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/mensagens/' + doc.id })
+                console.log({ id: doc.id, data: doc.data() });
+            })
+            return res.status(200).json(array)
+           
         })
         .catch(next)
 }

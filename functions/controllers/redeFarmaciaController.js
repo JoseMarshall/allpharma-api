@@ -30,10 +30,7 @@ const moment = require('moment')
  */
 
 exports.create = (newPharma, Id) => {
-    return res.status(201).send({
-        msg:'Farmacia Criada com sucesso'
-    })
-
+    
     return db
         .collection('RedeFarmacias')
         .doc(Id)
@@ -63,7 +60,7 @@ exports.getOne = (req, res, next) => {
                 return res.status(200).json(doc.data())
 
             } else {
-                return res.status(204).json({ msg: 'Esta Rede não foi encontrada' })
+                return res.status(404).json({ msg: 'Esta Rede não foi encontrada' })
             }
         })
         .catch(next)
@@ -75,16 +72,13 @@ exports.getAll = (req, res, next) => {
     db
         .collection('RedeFarmacias')
         .get()
-        .then(snap => {
-            if (!snap.empty) {
-                snap.docs.map(doc => {
-                    redeFarmacias.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/redeFarmacias/' + doc.id })
-                    console.log({ id: doc.id, data: doc.data() });
-                })
-                return res.status(200).json(redeFarmacias)
-            } else {
-                return res.status(204).send({ msg: 'Não foi encontrado nenhuma redeFarmacias' })
-            }
+        .then(async(snap) => {
+            await snap.docs.map(doc => {
+                redeFarmacias.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/redeFarmacias/' + doc.id })
+                console.log({ id: doc.id, data: doc.data() });
+            })
+            return res.status(200).json(redeFarmacias)
+            
         })
         .catch(next)
 }
