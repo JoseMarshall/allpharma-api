@@ -51,7 +51,7 @@ exports.getOne = (req, res, next) => {
         .collection(req.body.connection.collectionName)
         .doc(req.body.connection.contaUsuariosId)
         .collection('CategoriasProduto')
-        .doc(req.body.categoria)
+        .doc(req.query.categoria)
         .collection('Produtos')
         .doc(req.params.id)
         .get()
@@ -61,7 +61,7 @@ exports.getOne = (req, res, next) => {
                 return res.status(200).json(doc.data())
 
             } else {
-                return res.status(204).json({ msg: 'Este produto não foi encontrado' })
+                return res.status(404).json({ msg: 'Este produto não foi encontrado' })
             }
         })
         .catch(next)
@@ -74,25 +74,18 @@ exports.getAll = (req, res, next) => {
         .collection(req.body.connection.collectionName)
         .doc(req.body.connection.contaUsuariosId)
         .collection('CategoriasProduto')
+        .doc(req.query.categoria)       
+        .collection('Produtos')
         .get()
-        .then(snap => {            
-            snap.docs.map(doc => {
-                doc.ref.collection('Produtos')
-                    .get()
-                    .then(async(p) => {
-                        
-                            await p.forEach(produto => {
-                                produtos.push({ id: produto.id, data: produto.data(), link: process.env.URL_ROOT + '/produto/' + doc.id })
-                                console.log({ id: produto.id, data: produto.data() });
-                            })
-                        
-                            return res.status(200).json(produtos)
-                    })
+        .then(async(snap) => {                                                
+            await snap.forEach(produto => {
+                produtos.push({ id: produto.id, data: produto.data(), link: process.env.URL_ROOT + '/produto/' + produto.id+'?categoria='+req.query.categoria })
             })
-            
+        
+            return res.status(200).json(produtos)
         })
         .catch(next)
-
+        
 }
 
 
@@ -101,7 +94,7 @@ exports.delete = (req, res, next) => {
         .collection(req.body.connection.collectionName)
         .doc(req.body.connection.contaUsuariosId)
         .collection('CategoriasProduto')
-        .doc(req.body.categoria)
+        .doc(req.query.categoria)
         .collection('Produtos')
         .doc(req.params.id)
         .get()
