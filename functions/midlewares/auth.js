@@ -30,7 +30,7 @@ function generateToken(user, res) {
 
 
                         return res.status(200).send({
-                            token: 'Bearer ' + token,
+                            token: token,
                             link:process.env.URL_ROOT,
                             msg: 'login successfull, verifique o token enviado'
                         })
@@ -62,7 +62,7 @@ exports.checkAuth = (req, res, next) => {
                 const {
                     enabled,
                     passwordHash,
-                    ultimoAcesso,
+                    //ultimoAcesso,
                     collectionName,
                     acessosFalhados
                 } = doc.data()

@@ -4,8 +4,7 @@ const { db } = require('../credentials/admin')
 
 exports.checkToken = (req, res, next) => {
     try {
-        const incomingToken = req.headers.authorization.split(' ')[1]
-        const decodedToken = jwt.verify(incomingToken, process.env.JWT_KEY)
+        const decodedToken = jwt.verify(req.headers.authorization, process.env.JWT_KEY)
         db
             .collection('ContaUsuarios')
             .doc(decodedToken.contaUsuariosId)
