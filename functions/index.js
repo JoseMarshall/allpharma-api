@@ -1,18 +1,15 @@
 require('dotenv').config()
 const functions = require('firebase-functions')
-
 const express = require('express')
 const bodyParser = require('body-parser')
 const signUp = require('./midlewares/signup');
 const redefinePassword = require('./midlewares/auth');
 const { checkToken, checkMenuAccess } = require('./midlewares/checkToken');
-const emailSender = require('./email/emailSender');
 
 const redeFarmaciaRouter = require('./routes/redeFarmacia');
 const perfilRouter = require('./routes/perfil');
 const authRouter = require('./routes/auth');
 const farmaciaRouter = require('./routes/farmacia');
-
 const ajudaPrestadaRouter = require('./routes/ajudaPrestada');
 const categoriaProdutoRouter = require('./routes/categoriaProduto');
 const clientePacienteRouter = require('./routes/clientePaciente');
@@ -41,12 +38,9 @@ const app = express()
 const port = (parseInt(process.env.PORT) || 4000)
 app.listen(port, () => {
     console.log("Now listening on port " + port);
+    console.log("URL:" + process.env.URL_ROOT);
 })
 
-//Função que a cada hora checa a lista dos emails falhados e tenta o reenvio 
-setInterval(() => {
-    emailSender.resendAllFailedEmail()
-}, 3600000)
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -116,6 +110,4 @@ app.use((err, req, res, next) => {
 
 });
 
-
-//module.exports=app
 exports.api = functions.https.onRequest(app)

@@ -48,7 +48,7 @@ exports.create = async(newCliente, Id) => {
             updatedAt: null
         })
         .then(() => {
-            console.log(`Usuário ${newCliente.nome.completo} criado com sucesso `);
+            console.log(`Usuário ${Id} criado com sucesso `);
         })
 
 }

@@ -8,7 +8,8 @@ const transporter = nodemailer.createTransport({
     service: process.env.EMAIL_SERVICE, //The OlYn's email service
     auth: {
         user: process.env.EMAIL_ADDRESS, //The OlYn's email
-        pass: process.env.EMAIL_PASSWORD // The OlYn email's password
+        pass: process.env.EMAIL_PASSWORD, // The OlYn email's password
+        
     }
 })
 
@@ -60,18 +61,8 @@ exports.sendEmaiValidationCode = (user, validationCode, link, emailDest) => {
     const HTML = loadTemplate('accountReativation.hbs', context); //O html que irá no corpo do e-amil
     console.log('Trying to send email to: ' + emailDest);
     send(emailDest, HTML)
-        .then(data => {
-            console.log(data);
-            fs.appendFileSync(path.join(__dirname, 'sendingSuccessful.txt'),
-                '=========================================================================' +
-                JSON.stringify(data) +
-                '\n=========================================================================\n', { encoding: 'utf8' })
-
-        })
-        .catch(err => {
-            console.log(err);
-            fs.appendFileSync(path.join(__dirname, 'sendingFailed.txt'), `${context.userName};${context.password};${emailDest}$`, { encoding: 'utf8' })
-        });
+        .then(console.log)
+        .catch(console.error);
 }
 
 exports.sendEmailSignUp = (user, pass, emailDest) => {
@@ -84,40 +75,6 @@ exports.sendEmailSignUp = (user, pass, emailDest) => {
     const HTML = loadTemplate('credentials.hbs', context); //O html que irá no corpo do e-amil
     console.log('Trying to send email to: ' + emailDest);
     return send(emailDest, HTML)
-        .then(data => {
-            console.log(data);
-            fs.appendFileSync(path.join(__dirname, 'sendingSuccessful.txt'),
-                '=========================================================================\n' +
-                JSON.stringify(data) +
-                '=========================================================================\n', { encoding: 'utf8' })
-
-        })
-        .catch(err => {
-            console.log(err);
-            fs.appendFileSync(path.join(__dirname, 'sendingFailed.txt'), `${context.userName};${context.password};${emailDest}$`, { encoding: 'utf8' })
-        });
-}
-
-exports.resendAllFailedEmail = () => {
-
-    fs.readFile(path.join(__dirname, 'sendingFailed.txt'), { encoding: 'utf8' }, async(err, data) => {
-        let stringContent
-        let myArray
-        myArray = [...data.split('$')]
-
-        /**
-         * Apagar o conteudo do ficheiro
-         */
-        await fs.writeFileSync(path.join(__dirname, 'sendingFailed.txt'), '', { encoding: 'utf8' })
-
-        myArray.map((l) => {
-            if (l !== '') {
-                stringContent = l.split(';')
-                    //invocar função que envia  email
-                sendEmailSignUp(stringContent[0], stringContent[1], stringContent[2])
-            }
-        })
-
-    })
-
+        .then(console.log)
+        .catch(console.error);
 }
