@@ -46,9 +46,9 @@ exports.create = async(req, res, next) => {
 exports.getOne = (req, res, next) => {
     db
         .collection('RedeFarmacias')
-        .doc(req.body.farmacia.redeFarmaciaId || req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosId || req.body.connection.contaUsuariosOrganizacaoPai || req.body.farmacia.redeFarmaciaId)
         .collection('Farmacias')
-        .doc(req.body.farmacia.farmaciaId)
+        .doc(req.query.farmacia)
         .collection('Comentarios')
         .doc(req.params.id)
         .get()
@@ -69,15 +69,15 @@ exports.getAll = (req, res, next) => {
     let array = []
     db
         .collection('RedeFarmacias')
-        .doc(req.body.farmacia.redeFarmaciaId || req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosId || req.body.connection.contaUsuariosOrganizacaoPai ||req.body.farmacia.redeFarmaciaId)
         .collection('Farmacias')
-        .doc(req.body.farmacia.farmaciaId)
+        .doc(req.query.farmacia)
         .collection('Comentarios')
         .get()
         .then(async(snap) => {
             
             await snap.docs.map(doc => {
-                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/comentario/' + doc.id })
+                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/comentarios/' + doc.id })
                 console.log({ id: doc.id, data: doc.data() });
             })
 
@@ -92,15 +92,15 @@ exports.getAll = (req, res, next) => {
 exports.delete = (req, res, next) => {
     db
         .collection('RedeFarmacias')
-        .doc(req.body.farmacia.redeFarmaciaId)
+        .doc(req.body.farmacia.redeFarmaciaId || req.body.connection.contaUsuariosOrganizacaoPai || req.body.farmacia.redeFarmaciaId)
         .collection('Farmacias')
-        .doc(req.body.farmacia.farmaciaId)
+        .doc(req.query.farmacia)
         .collection('Comentarios')
         .doc(req.params.id)
         .get()
         .then(doc => {
             if (doc.exists) {
-                if (doc.data().Mensagem.From == req.body.connection.contaUsuariosId) {
+                if (doc.data().message.from == req.body.connection.contaUsuariosId) {
                     doc.ref.delete()
                         .then((result) => {
                             return res.status(200).json({ msg: 'Deleted Successfully', result })
@@ -119,15 +119,15 @@ exports.delete = (req, res, next) => {
 exports.update = (req, res, next) => {
     db
         .collection('RedeFarmacias')
-        .doc(req.body.farmacia.redeFarmaciaId)
+        .doc(req.body.farmacia.redeFarmaciaId || req.body.connection.contaUsuariosOrganizacaoPai || req.body.farmacia.redeFarmaciaId)
         .collection('Farmacias')
-        .doc(req.body.farmacia.farmaciaId)
+        .doc(req.query.farmacia)
         .collection('Comentarios')
         .doc(req.params.id)
         .get()
         .then(doc => {
             if (doc.exists) {
-                if (doc.data().mensagem.from == req.body.connection.contaUsuariosId) {
+                if (doc.data().message.from == req.body.connection.contaUsuariosId) {
 
                     req.body.comentario.updatedAt = moment().toJSON()
                     doc.ref.update(req.body.comentario)

@@ -132,7 +132,7 @@ exports.getAll = (req, res, next) => {
         .then(snap => {
            
             snap.docs.map(doc => {
-                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/encomenda/' + doc.id })
+                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/encomendas/' + doc.id })
                 console.log({
                     id: doc.id,
                     data: doc.data()

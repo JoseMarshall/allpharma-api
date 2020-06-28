@@ -102,14 +102,13 @@ exports.getAll = (req, res, next) => {
         .doc(req.body.farmacia.farmaciaId)
         .collection('Stocks')
         .get()
-        .then(async(snap) => {
-            
-                await snap.docs.map(doc => {
-                    array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/stocks/' + doc.id })
-                    console.log({ id: doc.id, data: doc.data() });
-                })
+        .then((snap) => {            
+            snap.docs.map(doc => {
+                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/stocks/' + doc.id })
+                console.log({ id: doc.id, data: doc.data() });
+            })
 
-                return res.status(200).json(array)
+            return res.status(200).json(array)
            
         })
         .catch(next)

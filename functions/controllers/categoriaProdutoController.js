@@ -29,16 +29,29 @@ exports.create = async(req, res, next) => {
 }
 
 exports.getOne = (req, res, next) => {
-    db
-        .collection(req.body.connection.collectionName)
-        .doc(req.body.connection.contaUsuariosId)
-        .collection('CategoriasProduto')
-        .doc(req.params.id)
-        .get()
+    const docRef = db
+                    .collection(req.body.connection.collectionName)
+                    .doc(req.body.connection.contaUsuariosId)
+                    .collection('CategoriasProduto')
+                    .doc(req.params.id)
+        docRef.get()
         .then(doc => {
             if (doc.exists) {
-                console.log(doc.data());
-                return res.status(200).json(doc.data())
+                const category = doc.data()
+                category.produtos=[] 
+                docRef.collection('Produtos')
+                .get()
+                .then(async(products)=>{
+                    for (const product of products.docs) {
+                        await category.produtos.push({
+                            id:product.id,
+                            ...product.data() 
+                        }) 
+                    }
+
+                    return res.status(200).json(category)
+                })
+                .catch(next)
 
             } else {
                 return res.status(404).json({ msg: 'Esta categoria não foi encontrada' })
@@ -58,7 +71,6 @@ exports.getAll = (req, res, next) => {
         .then(snap => {
             snap.docs.map(doc => {
                 categorias.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/categoriasProduto/' + doc.id })
-                console.log({ id: doc.id, data: doc.data() });
             })
             return res.status(200).json(categorias)            
         })

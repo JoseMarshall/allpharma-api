@@ -71,32 +71,32 @@ app.post('/redefinePassword', redefinePassword.setNewPassword)
 app.post('/requestPassword', redefinePassword.requestPassword) 
 app.get('/reactivateAccount', redefinePassword.reactivateAccount) 
 
-app.use('/redeFarmacia', redeFarmaciaRouter) 
-app.use('/genero', generoRouter) 
-app.use('/menu', menuRouter)
+app.use('/redeFarmacias', redeFarmaciaRouter) 
+app.use('/generos', generoRouter) 
+app.use('/menus', menuRouter)
 app.use(checkToken)
-app.use('/perfil', perfilRouter) 
-app.use('/farmacia', farmaciaRouter) 
-app.use('/ajudaPrestada', ajudaPrestadaRouter) //Dont remember what is it for
+app.use('/perfis', perfilRouter) 
+app.use('/farmacias', farmaciaRouter) 
+app.use('/ajudasPrestadas', ajudaPrestadaRouter) //Dont remember what is it for
 app.use('/categoriasProduto', categoriaProdutoRouter) 
-app.use('/clientePaciente', clientePacienteRouter) 
-app.use('/comentario', comentarioRouter) //Falta testar
+app.use('/clientesPaciente', clientePacienteRouter) 
+app.use('/comentarios', comentarioRouter)
 app.use('/comprasProduto', comprasProdutoRouter) //Falta testar
-app.use('/encomenda', encomendaRouter) //Falta testar
-app.use('/enfermeiro', enfermeiroRouter) //Falta testar
-app.use('/farmaceutico', farmaceuticoRouter) //Falta testar
-app.use('/fornecedor', fornecedorRouter) //Falta testar
-app.use('/funcionario', funcionarioRouter) //Falta testar
-app.use('/mensagem', mensagemRouter) //Falta testar
+app.use('/encomendas', encomendaRouter) //Falta testar
+app.use('/enfermeiros', enfermeiroRouter) //Falta testar
+app.use('/farmaceuticos', farmaceuticoRouter) //Falta testar
+app.use('/fornecedores', fornecedorRouter) //Falta testar
+app.use('/funcionarios', funcionarioRouter) //Falta testar
+app.use('/mensagens', mensagemRouter) //Falta testar
 app.use('/ordemEnfermeiros', ordemEmfermeiroRouter) //Falta testar
 app.use('/ordemFarmaceuticos', ordemFarmaceuticoRouter) //Falta testar
 app.use('/pedidosAjuda', pedidoAjudaRouter) //Falta testar
 app.use('/pedidosAjudaByCliente', pedidoAjudaByClienteRouter) //Falta testar
-app.use('/produto', produtoRouter) //Falta testar
-app.use('/produtoPrateleira', produtoPrateleiraRouter) //Falta testar
+app.use('/produtos', produtoRouter) 
+app.use('/produtosPrateleira', produtoPrateleiraRouter) //Falta testar
 app.use('/registoTroco', registoTrocoRouter) //Falta testar
-app.use('/resposta', respostaRouter) //Falta testar
-app.use('/stock', stockRouter) //Falta testar
+app.use('/respostas', respostaRouter) //Falta testar
+app.use('/stocks', stockRouter) //Falta testar
 app.use('/vendas', vendasRouter) //Falta testar
 
 
@@ -104,8 +104,8 @@ app.use('/vendas', vendasRouter) //Falta testar
 app.use((err, req, res, next) => {
 
     return res.status(500).json({
-        msg: 'Something went bad',
-        erro: err.message
+        msg: err.message,
+        erro: err
     })
 
 });

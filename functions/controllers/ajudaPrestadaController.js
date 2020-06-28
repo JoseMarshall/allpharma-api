@@ -96,14 +96,13 @@ exports.getAll = (req, res, next) => {
         .doc(refColection)
         .collection('AjudasPrestadas')
         .get()
-        .then(snap => {
-            
-                snap.docs.map(doc => {
-                    array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/' + collectionName.toLowerCase() + '/ajudaPrestada/' + doc.id })
-                    console.log({ id: doc.id, data: doc.data() });
-                })
+        .then(snap => {            
+            snap.docs.map(doc => {
+                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/' + collectionName.toLowerCase() + '/ajudasPrestadas/' + doc.id })
+                console.log({ id: doc.id, data: doc.data() });
+            })
 
-                return res.status(200).json(array)
+            return res.status(200).json(array)
            
         })
         .catch(next)

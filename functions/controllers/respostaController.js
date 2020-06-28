@@ -20,7 +20,7 @@ exports.create = async(req, res, next) => {
 
     db
         .collection('RedeFarmacias')
-        .doc(req.body.farmacia.redeFarmaciaId || req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosId || req.body.connection.contaUsuariosOrganizacaoPai || req.body.farmacia.redeFarmaciaId)
         .collection('Farmacias')
         .doc(req.body.farmacia.farmaciaId)
         .collection('Comentarios')
@@ -48,7 +48,7 @@ exports.getAll = (req, res, next) => {
     let array = []
     db
         .collection('RedeFarmacias')
-        .doc(req.body.farmacia.redeFarmaciaId || req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId || req.body.farmacia.redeFarmaciaId )
         .collection('Farmacias')
         .doc(req.body.farmacia.farmaciaId)
         .collection('Comentarios')
@@ -73,7 +73,7 @@ exports.getAll = (req, res, next) => {
 exports.delete = (req, res, next) => {
     db
         .collection('RedeFarmacias')
-        .doc(req.body.farmacia.redeFarmaciaId || req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
+        .doc( req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId || req.body.farmacia.redeFarmaciaId)
         .collection('Farmacias')
         .doc(req.body.farmacia.farmaciaId)
         .collection('Comentarios')
@@ -106,7 +106,7 @@ exports.delete = (req, res, next) => {
 exports.update = (req, res, next) => {
     db
         .collection('RedeFarmacias')
-        .doc(req.body.farmacia.redeFarmaciaId || req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId || req.body.farmacia.redeFarmaciaId)
         .collection('Farmacias')
         .doc(req.body.farmacia.farmaciaId)
         .collection('Comentarios')

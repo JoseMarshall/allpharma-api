@@ -50,30 +50,50 @@ exports.create = (newPharma, Id) => {
 }
 
 exports.getOne = (req, res, next) => {
-    db
-        .collection('RedeFarmacias')
-        .doc(req.params.id)
-        .get()
-        .then(doc => {
+    const docRef = db.collection('RedeFarmacias').doc(req.params.id)
+    docRef.get()    
+        .then((doc) => {
             if (doc.exists) {
-                console.log(doc.data());
-                return res.status(200).json(doc.data())
-
+                const redeFarmacia=doc.data()
+                docRef.listCollections()
+                    .then(async(subCollections)=>{
+                        for (const iterator of subCollections) {
+                            await iterator.get()
+                                .then((snap)=>{
+                                    const idx = iterator.id[0].toLowerCase()+iterator.id.slice(1)
+                                    redeFarmacia[idx] = []                             
+                                    snap.docs.map((d)=>{
+                                        redeFarmacia[idx].push({
+                                            id:d.id,
+                                            ...d.data(),
+                                            link:`${process.env.URL_ROOT}/${idx}/${d.id}`
+                                        })                                    
+                                    })
+                                     
+                                })        
+                        }
+                                                
+                        return res.status(200).json(redeFarmacia)
+                    })
+                    .catch(next)
+                
             } else {
                 return res.status(404).json({ msg: 'Esta Rede não foi encontrada' })
             }
+            
         })
-        .catch(next)
+        .catch(next) 
+   
 }
-
+ 
 exports.getAll = (req, res, next) => {
 
     let redeFarmacias = []
     db
         .collection('RedeFarmacias')
         .get()
-        .then(async(snap) => {
-            await snap.docs.map(doc => {
+        .then((snap) => {
+            snap.docs.map(doc => {
                 redeFarmacias.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/redeFarmacias/' + doc.id })
                 console.log({ id: doc.id, data: doc.data() });
             })
@@ -99,7 +119,7 @@ exports.update = (req, res, next) => {
                             msg: 'Updated Successfuly',
                             result,
                             id: doc.id,
-                            link: process.env.URL_ROOT + '/RedeFarmacias/' + doc.id
+                            link: process.env.URL_ROOT + '/redeFarmacias/' + doc.id
                         })
                     })
                     .catch(next)

@@ -63,9 +63,9 @@ exports.getAll = (req, res, next) => {
         .doc(req.body.connection.contaUsuariosId)
         .collection('Perfis')
         .get()
-        .then(async(snap) => {
-            await snap.docs.map(doc => {
-                perfis.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/perfil/' + doc.id })
+        .then((snap) => {
+            snap.docs.map(doc => {
+                perfis.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/perfis/' + doc.id })
                 console.log({ id: doc.id, data: doc.data() });
             })
             return res.status(200).json(perfis)

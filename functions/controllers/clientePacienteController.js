@@ -66,30 +66,25 @@ exports.getOne = (req, res, next) => {
                     .collection('PedidosAjuda')
                     .get()
                     .then(async(snapAjudas) => {
-                        
-                        await snapAjudas.docs.forEach((a) => {
+                        for (const ajuda of snapAjudas.docs) {
                             ajudas.push({
-                                id: a.id,
-                                ...a.data()
-                            })
-                        })
-                    })
-                    .then(() => {
-                        return doc.ref
+                                id: ajuda.id,
+                                ...ajuda.data()
+                            })                            
+                        }
+
+                        await doc.ref
                             .collection('Encomendas')
                             .get()
-                            .then(async(snapEncomendas) => {                                
-                                await snapEncomendas.docs.forEach((e) => {
+                            .then(async(snapEncomendas) => {  
+                                for (const encomenda of snapEncomendas.docs) {                                    
                                     encomendas.push({
-                                        id: e.id,
-                                        ...e.data()
+                                        id: encomenda.id,
+                                        ...encomenda.data()
                                     })
-                                })                                
+                                }
                             })
-
-                    })
-                    .then(() => {
-
+                            .catch(next)
                         return res.status(200).json({
                             clientePaciente: {
                                 ...doc.data(),
@@ -113,14 +108,11 @@ exports.getAll = (req, res, next) => {
     db
         .collection('ClientesPacientes')
         .get()
-        .then(async(snap) => {
-           
-            await snap.forEach((doc) => {
-                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/clientePaciente/' + doc.id })
-                console.log({ id: doc.id, data: doc.data() });
+        .then((snap) => {           
+            snap.forEach((doc) => {
+                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/clientesPaciente/' + doc.id })
             })
-            return res.status(200).json(array)
-           
+            return res.status(200).json(array)           
         })
         .catch(next)
 

@@ -55,10 +55,10 @@ exports.getOne = (req, res, next) => {
         .collection('Produtos')
         .doc(req.params.id)
         .get()
-        .then(doc => {
+        .then( doc => {
             if (doc.exists) {
-                console.log(doc.data());
-                return res.status(200).json(doc.data())
+                
+                return res.status(200).json({id: doc.id, ...doc.data()})
 
             } else {
                 return res.status(404).json({ msg: 'Este produto não foi encontrado' })
@@ -74,18 +74,22 @@ exports.getAll = (req, res, next) => {
         .collection(req.body.connection.collectionName)
         .doc(req.body.connection.contaUsuariosId)
         .collection('CategoriasProduto')
-        .doc(req.query.categoria)       
-        .collection('Produtos')
-        .get()
-        .then(async(snap) => {                                                
-            await snap.forEach(produto => {
-                produtos.push({ id: produto.id, data: produto.data(), link: process.env.URL_ROOT + '/produto/' + produto.id+'?categoria='+req.query.categoria })
-            })
-        
+        .listDocuments()
+        .then(async(categories)=>{
+            for (const category of categories) {
+                await category.collection('Produtos')
+                    .get()
+                    .then((snap) => {                                                                     
+                        snap.forEach(produto => {
+                            produtos.push({ id: produto.id, data: produto.data(), categoriaProdutoId: category.id,link: process.env.URL_ROOT + '/produtos/' + produto.id + '?categoria='+category.id})
+                        })
+                    
+                    })
+                    .catch(next)
+            }
             return res.status(200).json(produtos)
-        })
+        })        
         .catch(next)
-        
 }
 
 

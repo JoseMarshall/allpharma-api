@@ -108,7 +108,7 @@ exports.getAll = (req, res, next) => {
         .then(async(snap) => {
             
             await snap.forEach((doc) => {
-                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/enfermeiro/' + doc.id })
+                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/enfermeiros/' + doc.id })
                 console.log({ id: doc.id, data: doc.data() });
             })
             return res.status(200).json(array)

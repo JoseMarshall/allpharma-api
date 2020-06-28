@@ -108,8 +108,8 @@ exports.getAll = (req, res, next) => {
         .doc(req.body.farmacia.farmaciaId)
         .collection('ProdutosPrateleira')
         .get()
-        .then(async(snap) => {
-            await snap.docs.map(doc => {
+        .then((snap) => {
+            snap.docs.map(doc => {
                 array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/produtosPrateleira/' + doc.id })
                 console.log({ id: doc.id, data: doc.data() });
             })

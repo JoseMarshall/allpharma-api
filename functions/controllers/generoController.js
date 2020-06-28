@@ -10,13 +10,11 @@ exports.getAll = (req, res, next) => {
     db
         .collection('Generos')
         .get()
-        .then(async(snap) => {
-            
-            await snap.docs.map(doc => {
+        .then((snap) => {            
+            snap.docs.map(doc => {
                 array.push({ id: doc.id, data: doc.data()})
             })
-            return res.status(200).json(array)
-            
+            return res.status(200).json(array)            
         })
         .catch(next)
 }

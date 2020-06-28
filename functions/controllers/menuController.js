@@ -31,9 +31,8 @@ exports.getAll = (req, res, next) => {
     db
         .collection('Menus')
         .get()
-        .then(async(snap) => {
-            
-            await snap.docs.map(doc => {
+        .then((snap) => {            
+            snap.docs.map(doc => {
                 array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/menus/' + doc.id })
                 console.log({ id: doc.id, data: doc.data() });
             })
