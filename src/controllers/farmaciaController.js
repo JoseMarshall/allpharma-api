@@ -86,6 +86,7 @@ exports.getOne = (req, res, next) => {
         .doc(req.params.id)
         .get()
         .then(async(doc) => {
+            
             if (doc.exists) {
                 let imageProfile='', uploads=[];
                 const comentarios = []
@@ -151,6 +152,9 @@ exports.getAll = (req, res, next) => {
         .collection('RedeFarmacias')
         .doc(req.body.connection.contaUsuariosId || req.body.farmacia.redeFarmaciaId)
         .collection('Farmacias')
+        .orderBy('createdAt')        
+        .limit(20)
+        .startAfter(req.body.last || '')
         .get()
         .then((snap) => {            
             snap.forEach((doc) => {

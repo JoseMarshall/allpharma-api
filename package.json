@@ -2,19 +2,18 @@
   "name": "allpharma",
   "version": "1.0.0",
   "description": "Plataforma para gestão de farmácias",
-  "main": "functions/index.js",
+  "main": "src/server.js",
   "dependencies": {
     "@google-cloud/storage": "^4.1.2",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^3.0.8",
     "body-parser": "^1.19.0",
     "busboy": "^0.3.1",
+    "cors": "^2.8.5",
     "date-utils": "^1.2.21",
     "dotenv": "^8.2.0",
     "email-templates": "^6.0.3",
     "express": "^4.17.1",
-    "firebase": "^7.2.2",
     "firebase-admin": "^8.12.1",
-    "firebase-functions": "^3.7.0",
     "guid": "^0.0.12",
     "handlebars": "^4.7.6",
     "jshint": "^2.10.2",
@@ -30,11 +29,19 @@
     "supertest": "^4.0.2"
   },
   "scripts": {
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "start": "node ./src/server.js"
   },
   "keywords": [
     "pharma"
   ],
+  "engines": {
+    "node": "12.x"
+  },
   "author": "Josemar C. Hebo",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://JoseMarshall@bitbucket.org/JoseMarshall/allpharma_api.git"
+  }
 }
