@@ -21,7 +21,7 @@ const moment = require('moment');
 //     }]
 
 
-exports.create = async(req, res, next) => {
+exports.create = async (req, res, next) => {
 
     req.body.produto.updatedAt = null
     req.body.produto.createdAt = moment().toJSON()
@@ -33,12 +33,12 @@ exports.create = async(req, res, next) => {
         .doc(req.body.produto.categoria)
         .collection('Produtos')
         .add(req.body.produto)
-        .then(function() {
+        .then(function () {
             console.log(`Produto ${req.body.produto.nome} criado com sucesso `);
             return res.status(201).json({ msg: `Produto ${req.body.produto.nome} criado com sucesso ` })
 
         })
-        .catch(function(error) {
+        .catch(function (error) {
             console.error(`Falha ao cadastrar produto ${req.body.produto.nome} à Rede de Farmacia`, error.message);
             return res.status(500).json({ msg: error.message })
         });
@@ -55,10 +55,10 @@ exports.getOne = (req, res, next) => {
         .collection('Produtos')
         .doc(req.params.id)
         .get()
-        .then( doc => {
+        .then(doc => {
             if (doc.exists) {
-                
-                return res.status(200).json({id: doc.id, ...doc.data()})
+
+                return res.status(200).json({ id: doc.id, ...doc.data() })
 
             } else {
                 return res.status(404).json({ msg: 'Este produto não foi encontrado' })
@@ -75,20 +75,20 @@ exports.getAll = (req, res, next) => {
         .doc(req.body.connection.contaUsuariosId)
         .collection('CategoriasProduto')
         .listDocuments()
-        .then(async(categories)=>{
+        .then(async (categories) => {
             for (const category of categories) {
                 await category.collection('Produtos')
                     .get()
-                    .then((snap) => {                                                                     
+                    .then((snap) => {
                         snap.forEach(produto => {
-                            produtos.push({ id: produto.id, data: produto.data(), categoriaProdutoId: category.id,link: process.env.URL_ROOT + '/produtos/' + produto.id + '?categoria='+category.id})
+                            produtos.push({ id: produto.id, data: produto.data(), categoriaProdutoId: category.id, link: process.env.URL_ROOT + '/produtos/' + produto.id + '?categoria=' + category.id })
                         })
-                    
+
                     })
                     .catch(next)
             }
             return res.status(200).json(produtos)
-        })        
+        })
         .catch(next)
 }
 

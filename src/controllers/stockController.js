@@ -18,9 +18,10 @@ const moment = require('moment');
 
 
 
-exports.create = async(req, res, next) => {
+exports.create = async (req, res, next) => {
 
-    if (!contains(req.body.stock.codigoBarra, req.body)) {
+    const { found, stock } = await contains(req.body.stock.codigoBarra, req)
+    if (!found) {
         req.body.stock.updatedAt = null
         req.body.stock.createdAt = moment().toJSON()
         db
@@ -30,7 +31,7 @@ exports.create = async(req, res, next) => {
             .doc(req.body.farmacia.farmaciaId)
             .collection('Stocks')
             .add(req.body.stock)
-            .then(function(result) {
+            .then(function (result) {
 
                 console.log(`Stock ${result.id} criado com sucesso `);
 
@@ -39,32 +40,35 @@ exports.create = async(req, res, next) => {
                 })
 
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.error(`Falha ao cadastrar Stock`, error.message);
                 return res.status(500).json({ msg: error.message })
             });
     } else {
+        req.body.stock.quantidadeInicial += stock.quantidadeInicial
+        req.body.stock.quantidadeDisponivel += stock.quantidadeDisponivel
         db
             .collection('RedeFarmacias')
             .doc(req.body.connection.contaUsuariosId)
             .collection('Farmacias')
             .doc(req.body.farmacia.farmaciaId)
             .collection('Stocks')
-            .doc(req.body.stock.id)
-            .then(function(doc) {
+            .doc(stock.id)
+            .get()
+            .then(function (doc) {
                 doc.ref.update({
                     quantidadeInicial: req.body.stock.quantidadeInicial,
                     quantidadeDisponivel: req.body.stock.quantidadeDisponivel,
                     updatedAt: moment().toJSON()
                 })
-                console.log(`Stock ${result.id} criado com sucesso `);
+                console.log(`Stock ${doc.id} actualizado com sucesso `);
 
                 return res.status(201).json({
-                    msg: `Stock ${result.id} criado com sucesso `
+                    msg: `Stock ${doc.id} actualizado com sucesso `
                 })
 
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.error(`Falha ao cadastrar Stock`, error.message);
                 return res.status(500).json({ msg: error.message })
             });
@@ -102,14 +106,14 @@ exports.getAll = (req, res, next) => {
         .doc(req.body.farmacia.farmaciaId)
         .collection('Stocks')
         .get()
-        .then((snap) => {            
+        .then((snap) => {
             snap.docs.map(doc => {
                 array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/stocks/' + doc.id })
                 console.log({ id: doc.id, data: doc.data() });
             })
 
             return res.status(200).json(array)
-           
+
         })
         .catch(next)
 
@@ -142,24 +146,18 @@ exports.delete = (req, res, next) => {
 }
 
 
-function contains(barCode, body) {
-    db
+async function contains(barCode, req) {
+    let obj
+    await db
         .collection('RedeFarmacias')
-        .doc(body.connection.contaUsuariosOrganizacaoPai || body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Farmacias')
-        .doc(body.farmacia.farmaciaId)
+        .doc(req.body.farmacia.farmaciaId)
         .collection('Stocks')
-        .where('CodigoBarra', '==', barCode)
+        .where('codigoBarra', '==', barCode)
         .get()
-        .then(function(result) {
-            if (!result.empty) {
-                result.forEach(r => {
-                    body.stock.id += r.id
-                    body.stock.quantidadeInicial += r.data().quantidadeInicial
-                    body.stock.quantidadeDisponivel += r.data().quantidadeDisponivel
-                })
-                return true
-            }
-            return false
+        .then(function (result) {
+            return obj = (!result.empty) ? { found: true, stock: { id: result.docs[0].id, ...result.docs[0].data() } } : { found: false }
         })
+    return obj
 }

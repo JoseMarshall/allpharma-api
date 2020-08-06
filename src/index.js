@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const signUp = require('./midlewares/signup');
 const redefinePassword = require('./midlewares/auth');
 const cors = require('cors')
-const { checkToken, checkMenuAccess } = require('./midlewares/checkToken');
+const { checkToken } = require('./midlewares/checkToken');
 
 const redeFarmaciaRouter = require('./routes/redeFarmacia');
 const perfilRouter = require('./routes/perfil');

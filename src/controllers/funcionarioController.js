@@ -3,7 +3,7 @@ const { db } = require('../credentials/admin')
 const CheckerController = require('../midlewares/checker')
 const moment = require('moment');
 const emailSender = require("../email/emailSender");
-
+const bcrypt = require('bcrypt')
 // "Funcionarios": [{
 //         "NumIdentificacao": "",
 //         "Nome": {
@@ -67,12 +67,11 @@ const emailSender = require("../email/emailSender");
 //     }
 
 // }]
-exports.create = async(req, res, next) => {
+exports.create = async (req, res, next) => {
 
-    await CheckerController.generateNewCredentials(req.body).then(async(x) => {
+    await CheckerController.generateNewCredentials(req.body).then(async (x) => {
         req.body.contaUsuarios.userName = x.userName
         req.body.contaUsuarios.password = x.password
-        console.log(req.body.contaUsuarios);
     })
 
     let passwordHash;
@@ -88,12 +87,12 @@ exports.create = async(req, res, next) => {
             let newAccount = {
                 username: req.body.contaUsuarios.userName,
                 passwordHash: passwordHash,
-                email: req.body.contaUsuarios.email,
+                email: req.body.funcionario.email,
                 codigoVerificacao: codeVerification,
                 acessosFalhados: 0,
                 advertencias: 0,
                 ultimoAcesso: null,
-                collectionName: req.body.contaUsuarios.collectionName,
+                collectionName: req.body.connection.collectionName,
                 contaUsuariosOrganizacaoPai: req.body.connection.contaUsuariosId,
                 createdAt: moment().toJSON(),
                 updatedAt: null,
@@ -116,16 +115,15 @@ exports.create = async(req, res, next) => {
                         .collection('Funcionarios')
                         .doc(req.body.contaUsuarios.userName)
                         .set({ contaUsuariosId: req.body.contaUsuarios.userName, ...req.body.funcionario })
-                        .then(function() {
+                        .then(function () {
                             console.log(`Funcionario ${req.body.funcionario.nome} criado com sucesso `);
 
                             emailSender.sendEmailSignUp(req.body.contaUsuarios.userName,
                                 req.body.contaUsuarios.password,
-                                req.body.contaUsuarios.email)
+                                req.body.funcionario.email)
 
                             //Regista na coleção funcionarios que esta dentro da coleção farmacias
                             delete req.body.funcionario.menus
-                            delete req.body.funcionario.farmacia
 
                             db
                                 .collection(req.body.connection.collectionName)
@@ -135,14 +133,14 @@ exports.create = async(req, res, next) => {
                                 .collection('Funcionarios')
                                 .doc(req.body.contaUsuarios.userName)
                                 .set(req.body.funcionario)
-                                .then(()=>{
+                                .then(() => {
                                     return res.status(201).json({
                                         msg: `Funcionario ${req.body.funcionario.nome} criado com sucesso `
                                     })
                                 })
 
                         })
-                        .catch(function(error) {
+                        .catch(function (error) {
                             console.error(`Falha ao cadastrar Funcionario ${req.body.funcionario.nome} à Rede de Farmacia`, error.message);
                             return res.status(500).json({ msg: error.message })
                         });
@@ -171,10 +169,10 @@ exports.getOne = (req, res, next) => {
         .doc(req.params.id)
         .get()
         .then(doc => {
-            return (doc.exists) ? 
-            res.status(200).json(doc.data()) :
-            res.status(404).json({ msg: 'Este Funcionario não foi encontrado' })
-            
+            return (doc.exists) ?
+                res.status(200).json(doc.data()) :
+                res.status(404).json({ msg: 'Este Funcionario não foi encontrado' })
+
         })
         .catch(next)
 }
@@ -187,13 +185,13 @@ exports.getAll = (req, res, next) => {
         .doc(req.body.connection.contaUsuariosId)
         .collection('Funcionarios')
         .get()
-        .then((snap) => {            
+        .then((snap) => {
             snap.docs.map(doc => {
                 array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/funcionarios/' + doc.id })
                 console.log({ id: doc.id, data: doc.data() });
             })
             return res.status(200).json(array)
-            
+
         })
         .catch(next)
 

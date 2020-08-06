@@ -2,14 +2,34 @@ require('dotenv').config()
 const nodemailer = require('nodemailer')
 const handleBars = require('handlebars')
 const fs = require('fs')
-const path = require('path')
+const { google } = require("googleapis");
+const OAuth2 = google.auth.OAuth2;
+
+const clientId = '1010002138431-tn5ag045ijnsau0pbpc9g5uh83krsmi7.apps.googleusercontent.com'
+const clientSecret = '_8vXs2cGX8CWUZ06zsA6yHgQ'
+const refreshToken = '1//040EPxtx8hRXQCgYIARAAGAQSNwF-L9IrvEkhdmz1DqEuUeY_V-GLnvlHAFu-Kh_tKdAljTcPsP8ojoFTGyFboQR6JRwDtYjxpKw'
+
+const myOAuth2Client = new OAuth2(
+    clientId,
+    clientSecret,
+    "https://developers.google.com/oauthplayground"
+)
+
+myOAuth2Client.setCredentials({
+    refresh_token: refreshToken
+});
+const accessToken = myOAuth2Client.getAccessToken()
 
 const transporter = nodemailer.createTransport({
     service: process.env.EMAIL_SERVICE, //The OlYn's email service
     auth: {
         user: process.env.EMAIL_ADDRESS, //The OlYn's email
-        pass: process.env.EMAIL_PASSWORD, // The OlYn email's password
-        
+        type: 'OAuth2',
+        accessToken,
+        clientId,
+        clientSecret,
+        refreshToken
+
     }
 })
 
@@ -59,7 +79,6 @@ exports.sendEmaiValidationCode = (user, validationCode, link, emailDest) => {
         link
     };
     const HTML = loadTemplate('accountReativation.hbs', context); //O html que irá no corpo do e-amil
-    console.log('Trying to send email to: ' + emailDest);
     send(emailDest, HTML)
         .then(console.log)
         .catch(console.error);
@@ -73,7 +92,6 @@ exports.sendEmailSignUp = (user, pass, emailDest) => {
         link: `${process.env.FRONT_END}/auth?username=${user}&password=${pass}`
     };
     const HTML = loadTemplate('credentials.hbs', context); //O html que irá no corpo do e-amil
-    console.log('Trying to send email to: ' + emailDest);
     return send(emailDest, HTML)
         .then(console.log)
         .catch(console.error);
