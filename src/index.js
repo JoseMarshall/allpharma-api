@@ -42,7 +42,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //============================      CORS       ===========================
 const whitelist = [
     process.env.URL_ROOT,
-    process.env.FRONT_END
+    process.env.FRONT_END,
+    process.env.LINK_TEST
 ]; //the array containing all url allowed by cors
 const corsOptions = {
     origin: function (origin, callback) {
