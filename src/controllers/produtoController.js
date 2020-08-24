@@ -29,16 +29,13 @@ exports.create = async (req, res, next) => {
     db
         .collection(req.body.connection.collectionName)
         .doc(req.body.connection.contaUsuariosId)
-        .collection('CategoriasProduto')
-        .doc(req.body.produto.categoria)
         .collection('Produtos')
         .add(req.body.produto)
-        .then(function () {
-            console.log(`Produto ${req.body.produto.nome} criado com sucesso `);
-            return res.status(201).json({ msg: `Produto ${req.body.produto.nome} criado com sucesso ` })
+        .then((doc) => {
+            return res.status(201).json({ msg: `Produto ${req.body.produto.nome}  ${doc.id} criado com sucesso ` })
 
         })
-        .catch(function (error) {
+        .catch((error) => {
             console.error(`Falha ao cadastrar produto ${req.body.produto.nome} à Rede de Farmacia`, error.message);
             return res.status(500).json({ msg: error.message })
         });
@@ -50,8 +47,6 @@ exports.getOne = (req, res, next) => {
     db
         .collection(req.body.connection.collectionName)
         .doc(req.body.connection.contaUsuariosId)
-        .collection('CategoriasProduto')
-        .doc(req.query.categoria)
         .collection('Produtos')
         .doc(req.params.id)
         .get()
@@ -73,23 +68,18 @@ exports.getAll = (req, res, next) => {
     db
         .collection(req.body.connection.collectionName)
         .doc(req.body.connection.contaUsuariosId)
-        .collection('CategoriasProduto')
-        .listDocuments()
-        .then(async (categories) => {
-            for (const category of categories) {
-                await category.collection('Produtos')
-                    .get()
-                    .then((snap) => {
-                        snap.forEach(produto => {
-                            produtos.push({ id: produto.id, data: produto.data(), categoriaProdutoId: category.id, link: process.env.URL_ROOT + '/produtos/' + produto.id + '?categoria=' + category.id })
-                        })
+        .collection('Produtos')
+        .get()
+        .then((snap) => {
+            snap.forEach(produto => {
+                produtos.push({ id: produto.id, data: produto.data(), link: `/produtos/${produto.id}` })
+            })
 
-                    })
-                    .catch(next)
-            }
             return res.status(200).json(produtos)
         })
         .catch(next)
+
+
 }
 
 

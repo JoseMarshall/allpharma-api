@@ -60,8 +60,9 @@ const corsOptions = {
         "Authorization",
         "X-Requested-With",
         "X-CSRF-Token",
-        "application/json",
-    ]
+        "application/json"
+    ],
+
 };
 app.use(cors(corsOptions));
 //========================================================================
