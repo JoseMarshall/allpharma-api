@@ -14,14 +14,11 @@ exports.create = async (req, res, next) => {
         .collection(req.body.connection.collectionName)
         .doc(req.body.connection.contaUsuariosId)
         .collection('CategoriasProduto')
-        .add({ nome: req.body.categoriaProduto.nome })
+        .add({ nome: req.body.categoria.nome })
         .then(function () {
-            console.log(`Categoria ${req.body.categoriaProduto.nome} criada com sucesso `);
             return res.status(201).json({ msg: `Categoria ${req.body.categoriaProduto.nome} criada com sucesso ` })
-
         })
         .catch(function (error) {
-            console.error(`Falha ao cadastrar categoria ${req.body.categoriaProduto.nome} à Rede de Farmacia`, error.message);
             return res.status(500).json({ msg: error.message })
         });
 
@@ -116,7 +113,6 @@ exports.update = (req, res, next) => {
             if (doc.exists) {
                 doc.ref.update(req.body.categoria)
                     .then((result) => {
-                        doc.ref.id = req.body.categoria.nome
                         res.status(201).send({
                             msg: 'Updated Successfuly',
                             result,

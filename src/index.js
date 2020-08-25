@@ -43,7 +43,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const whitelist = [
     process.env.URL_ROOT,
     process.env.FRONT_END,
-    process.env.LINK_TEST
+    ...process.env.LINK_TEST.split(';')
 ]; //the array containing all url allowed by cors
 const corsOptions = {
     origin: function (origin, callback) {
@@ -60,7 +60,6 @@ const corsOptions = {
         "Authorization",
         "X-Requested-With",
         "X-CSRF-Token",
-        "application/json"
     ],
 
 };

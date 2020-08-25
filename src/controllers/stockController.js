@@ -32,16 +32,11 @@ exports.create = async (req, res, next) => {
             .collection('Stocks')
             .add(req.body.stock)
             .then(function (result) {
-
-                console.log(`Stock ${result.id} criado com sucesso `);
-
                 return res.status(201).json({
                     msg: `Stock ${result.id} criado com sucesso `
                 })
-
             })
             .catch(function (error) {
-                console.error(`Falha ao cadastrar Stock`, error.message);
                 return res.status(500).json({ msg: error.message })
             });
     } else {
@@ -61,7 +56,6 @@ exports.create = async (req, res, next) => {
                     quantidadeDisponivel: req.body.stock.quantidadeDisponivel,
                     updatedAt: moment().toJSON()
                 })
-                console.log(`Stock ${doc.id} actualizado com sucesso `);
 
                 return res.status(201).json({
                     msg: `Stock ${doc.id} actualizado com sucesso `
@@ -69,7 +63,6 @@ exports.create = async (req, res, next) => {
 
             })
             .catch(function (error) {
-                console.error(`Falha ao cadastrar Stock`, error.message);
                 return res.status(500).json({ msg: error.message })
             });
     }
@@ -86,7 +79,6 @@ exports.getOne = (req, res, next) => {
         .get()
         .then(doc => {
             if (doc.exists) {
-                console.log(doc.data());
                 return res.status(200).json(doc.data())
 
             } else {
@@ -107,9 +99,8 @@ exports.getAll = (req, res, next) => {
         .collection('Stocks')
         .get()
         .then((snap) => {
-            snap.docs.map(doc => {
-                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/stocks/' + doc.id })
-                console.log({ id: doc.id, data: doc.data() });
+            snap.docs.forEach(doc => {
+                array.push({ id: doc.id, ...doc.data(), link: '/stocks/' + doc.id })
             })
 
             return res.status(200).json(array)

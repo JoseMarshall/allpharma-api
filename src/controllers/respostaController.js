@@ -13,7 +13,7 @@ const moment = require('moment');
 
 
 
-exports.create = async(req, res, next) => {
+exports.create = async (req, res, next) => {
 
     req.body.resposta.updatedAt = null
     req.body.resposta.createdAt = moment().toJSON()
@@ -27,17 +27,14 @@ exports.create = async(req, res, next) => {
         .doc(req.params.id)
         .collection('Respostas')
         .add(req.body.resposta)
-        .then(function(result) {
-
-            console.log(`Resposta ${result.id} criada com sucesso `);
+        .then(function (result) {
 
             return res.status(201).json({
                 msg: `Resposta ${result.id} criada com sucesso `
             })
 
         })
-        .catch(function(error) {
-            console.error(`Falha ao responder ao comentário`, error.message);
+        .catch(function (error) {
             return res.status(500).json({ msg: error.message })
         });
 
@@ -48,22 +45,22 @@ exports.getAll = (req, res, next) => {
     let array = []
     db
         .collection('RedeFarmacias')
-        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId || req.body.farmacia.redeFarmaciaId )
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId || req.body.farmacia.redeFarmaciaId)
         .collection('Farmacias')
         .doc(req.body.farmacia.farmaciaId)
         .collection('Comentarios')
         .doc(req.params.id)
         .collection('Respostas')
         .get()
-        .then(async(snap) => {
-            
-            await snap.docs.map(doc => {
-                array.push({ id: doc.id, data: doc.data() })
-                console.log({ id: doc.id, data: doc.data() });
+        .then((snap) => {
+
+            snap.docs.forEach(doc => {
+                array.push({ id: doc.id, ...doc.data() })
+                console.log({ id: doc.id, ...doc.data() });
             })
 
             return res.status(200).json(array)
-            
+
         })
         .catch(next)
 
@@ -73,7 +70,7 @@ exports.getAll = (req, res, next) => {
 exports.delete = (req, res, next) => {
     db
         .collection('RedeFarmacias')
-        .doc( req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId || req.body.farmacia.redeFarmaciaId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId || req.body.farmacia.redeFarmaciaId)
         .collection('Farmacias')
         .doc(req.body.farmacia.farmaciaId)
         .collection('Comentarios')
@@ -91,7 +88,6 @@ exports.delete = (req, res, next) => {
                         .catch(next)
                 } else {
                     return res.status(404).json({ msg: 'Unable to delete' })
-
                 }
 
             } else {

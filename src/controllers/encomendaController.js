@@ -65,7 +65,7 @@ const moment = require('moment');
 // } 
 
 
-exports.create = async(req, res, next) => {
+exports.create = async (req, res, next) => {
 
     req.body.encomenda.updatedAt = null
     req.body.encomenda.createdAt = moment().toJSON()
@@ -74,7 +74,7 @@ exports.create = async(req, res, next) => {
         .doc(req.body.connection.contaUsuariosId)
         .collection('Encomendas')
         .add(req.body.encomenda)
-        .then(async function(encomendaRef) {
+        .then(async function (encomendaRef) {
             let TotalReceber = 0
             await req.body.encomenda.produtosEncomendados.map((p) => {
                 TotalReceber += p.SubTotal
@@ -95,7 +95,7 @@ exports.create = async(req, res, next) => {
                 })
 
         })
-        .catch(function(error) {
+        .catch(function (error) {
             console.error(`Falha ao encomendar produtos à Rede de Farmacia`, error.message);
             return res.status(500).json({ msg: error.message })
         });
@@ -112,7 +112,6 @@ exports.getOne = (req, res, next) => {
         .get()
         .then(doc => {
             if (doc.exists) {
-                console.log(doc.data());
                 return res.status(200).json(doc.data())
 
             } else {
@@ -130,17 +129,11 @@ exports.getAll = (req, res, next) => {
         .collection('Encomendas')
         .get()
         .then(snap => {
-           
-            snap.docs.map(doc => {
-                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/encomendas/' + doc.id })
-                console.log({
-                    id: doc.id,
-                    data: doc.data()
-                });
-
-            })
+            for (const doc of snap.docs) {
+                array.push({ id: doc.id, data: doc.data(), link: '/encomendas/' + doc.id })
+            }
             return res.status(200).json(array)
-            
+
         })
         .catch(next)
 
@@ -213,7 +206,7 @@ exports.update = (req, res, next) => {
                         msg: 'Updated Successfuly',
                         result,
                         id: req.params.id,
-                        link: process.env.URL_ROOT + '/encomenda/' + req.params.id
+                        link: '/encomenda/' + req.params.id
                     })
                 })
         })

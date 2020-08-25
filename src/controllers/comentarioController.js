@@ -15,7 +15,7 @@ const moment = require('moment');
 //     }],
 
 
-exports.create = async(req, res, next) => {
+exports.create = async (req, res, next) => {
 
     req.body.comentario.mensagem.updatedAt = null
     req.body.comentario.mensagem.createdAt = moment().toJSON()
@@ -27,17 +27,14 @@ exports.create = async(req, res, next) => {
         .doc(req.body.farmacia.farmaciaId)
         .collection('Comentarios')
         .add(req.body.comentario)
-        .then(function(result) {
-
-            console.log(`Comentário ${result.id} criado com sucesso `);
+        .then(function (result) {
 
             return res.status(201).json({
                 msg: `Comentário ${result.id} criado com sucesso `
             })
 
         })
-        .catch(function(error) {
-            console.error(`Falha ao postar o comentário`, error.message);
+        .catch(function (error) {
             return res.status(500).json({ msg: error.message })
         });
 
@@ -54,7 +51,6 @@ exports.getOne = (req, res, next) => {
         .get()
         .then(doc => {
             if (doc.exists) {
-                console.log(doc.data());
                 return res.status(200).json(doc.data())
 
             } else {
@@ -69,20 +65,18 @@ exports.getAll = (req, res, next) => {
     let array = []
     db
         .collection('RedeFarmacias')
-        .doc(req.body.connection.contaUsuariosId || req.body.connection.contaUsuariosOrganizacaoPai ||req.body.farmacia.redeFarmaciaId)
+        .doc(req.body.connection.contaUsuariosId || req.body.connection.contaUsuariosOrganizacaoPai || req.body.farmacia.redeFarmaciaId)
         .collection('Farmacias')
         .doc(req.query.farmacia)
         .collection('Comentarios')
         .get()
-        .then(async(snap) => {
-            
-            await snap.docs.map(doc => {
-                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/comentarios/' + doc.id })
-                console.log({ id: doc.id, data: doc.data() });
-            })
+        .then(async (snap) => {
+            for (const doc of snap.docs) {
+                array.push({ id: doc.id, ...doc.data(), link: '/comentarios/' + doc.id })
+            }
 
             return res.status(200).json(array)
-            
+
         })
         .catch(next)
 

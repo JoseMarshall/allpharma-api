@@ -5,22 +5,22 @@ const credentials = require('../credentials/credentials.json')
 const moment = require('moment');
 
 const storage = Storage.name = credentials.storageBucket
-    // "Farmaceuticos": [{
-    //     "ContaUsuariosId": "",
-    //     "Nome": {
-    //         "Primeiro": "",
-    //         "Apelido": "",
-    //         "Completo": ""
-    //     },
-    //     "NumCarteira": "",
-    //     "Genero": "",
-    //     "Especialidades": [""],
-    //     "CreatedAt": "",
-    //     "UpdatedAt": ""
-    // }]
+// "Farmaceuticos": [{
+//     "ContaUsuariosId": "",
+//     "Nome": {
+//         "Primeiro": "",
+//         "Apelido": "",
+//         "Completo": ""
+//     },
+//     "NumCarteira": "",
+//     "Genero": "",
+//     "Especialidades": [""],
+//     "CreatedAt": "",
+//     "UpdatedAt": ""
+// }]
 
 
-exports.create = async(newFarmaceutico, Id) => {
+exports.create = async (newFarmaceutico, Id) => {
 
     newFarmaceutico.updatedAt = null
     newFarmaceutico.createdAt = moment().toJSON()
@@ -34,7 +34,7 @@ exports.create = async(newFarmaceutico, Id) => {
         .collection('Farmaceuticos')
         .doc(Id)
         .set(newFarmaceutico)
-        .then(function(doc) {
+        .then(function (doc) {
 
             return db
                 .collection('Farmaceuticos')
@@ -49,7 +49,7 @@ exports.create = async(newFarmaceutico, Id) => {
                 })
 
         })
-        .catch(function(error) {
+        .catch(function (error) {
             console.error(`Falha ao cadastrar Farmaceutico ${newFarmaceutico.nome.completo} à Ordem de Farmaceuticos`, error.message);
         });
 
@@ -66,20 +66,15 @@ exports.getOne = (req, res, next) => {
                 doc.ref
                     .collection('AjudasPrestadas')
                     .get()
-                    .then(async(snapAjudas) => {
+                    .then(async (snapAjudas) => {
                         if (!snapAjudas.empty) {
                             let ajudas = []
-                            await snapAjudas.docs.forEach((a) => {
+                            snapAjudas.docs.forEach((a) => {
                                 ajudas.push({
                                     id: a.id,
                                     ...a.data()
                                 })
                             })
-                            console.log({
-                                ...doc.data(),
-                                ajudas
-                            });
-
                             return res.status(200).json({
                                 farmaceutico: {
                                     ...doc.data(),
@@ -107,14 +102,12 @@ exports.getAll = (req, res, next) => {
     db
         .collection('Farmaceuticos')
         .get()
-        .then(async(snap) => {
-            
-            await snap.forEach((doc) => {
+        .then(async (snap) => {
+            snap.forEach((doc) => {
                 array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/farmaceuticos/' + doc.id })
-                console.log({ id: doc.id, data: doc.data() });
             })
             return res.status(200).json(array)
-           
+
         })
         .catch(next)
 
@@ -172,7 +165,7 @@ exports.update = (req, res, next) => {
                                     msg: 'Updated Successfuly',
                                     result,
                                     id: doc.id,
-                                    link: process.env.URL_ROOT + '/farmaceutico/' + doc.id
+                                    link: '/farmaceutico/' + doc.id
                                 })
                             })
                             .catch(next)
@@ -220,18 +213,18 @@ exports.setImageProfile = (req, res, next) => {
 
         storage.upload(imageToBeUploaded.filePath, { name: imageFileName })
 
-        // admin
-        //     .storage()
-        //     .bucket('allpharma-e8f00.appspot.com')
-        //     .upload(imageToBeUploaded.filePath, {
-        //         resumable: false,
-        //         metadata: {
-        //             metadata: {
-        //                 contentType: imageToBeUploaded.mimetype
-        //             }
-        //         }
-        //     })
-        .then(() => {
+            // admin
+            //     .storage()
+            //     .bucket('allpharma-e8f00.appspot.com')
+            //     .upload(imageToBeUploaded.filePath, {
+            //         resumable: false,
+            //         metadata: {
+            //             metadata: {
+            //                 contentType: imageToBeUploaded.mimetype
+            //             }
+            //         }
+            //     })
+            .then(() => {
                 const imageURL = `https//firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`
                 return db
                     .collection(req.body.connection.collectionName)

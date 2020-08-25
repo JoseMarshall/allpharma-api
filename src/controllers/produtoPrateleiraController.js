@@ -25,7 +25,7 @@ const moment = require('moment');
 //     }]
 
 
-exports.create = async(req, res, next) => {
+exports.create = async (req, res, next) => {
 
     if (!contains(req.body.produtoPrateleira.codigoBarra, req.body)) {
         req.body.produtoPrateleira.updatedAt = null
@@ -37,17 +37,14 @@ exports.create = async(req, res, next) => {
             .doc(req.body.farmacia.farmaciaId)
             .collection('ProdutosPrateleira')
             .add(req.body.produtoPrateleira)
-            .then(function(result) {
-
-                console.log(`Stock ${result.id} criado com sucesso `);
+            .then(function (result) {
 
                 return res.status(201).json({
                     msg: `Stock ${result.id} criado com sucesso `
                 })
 
             })
-            .catch(function(error) {
-                console.error(`Falha ao colocar o produto na prateleira`, error.message);
+            .catch(function (error) {
                 return res.status(500).json({ msg: error.message })
             });
     } else {
@@ -58,20 +55,17 @@ exports.create = async(req, res, next) => {
             .doc(req.body.farmacia.farmaciaId)
             .collection('ProdutosPrateleira')
             .doc(req.body.produtoPrateleira.id)
-            .then(function(doc) {
+            .then(function (doc) {
                 doc.ref.update({
                     quantidade: req.body.produtoPrateleira.quantidade,
                     updatedAt: moment().toJSON()
                 })
-                console.log(`Produto ${req.body.produtoPrateleira.codigoBarra} colocado com sucesso.`);
-
                 return res.status(201).json({
                     msg: `Produto ${req.body.produtoPrateleira.codigoBarra} colocado com sucesso.`
                 })
 
             })
-            .catch(function(error) {
-                console.error(`Falha: `, error.message);
+            .catch(function (error) {
                 return res.status(500).json({ msg: error.message })
             });
     }
@@ -88,7 +82,6 @@ exports.getOne = (req, res, next) => {
         .get()
         .then(doc => {
             if (doc.exists) {
-                console.log(doc.data());
                 return res.status(200).json(doc.data())
 
             } else {
@@ -110,12 +103,11 @@ exports.getAll = (req, res, next) => {
         .get()
         .then((snap) => {
             snap.docs.map(doc => {
-                array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/produtosPrateleira/' + doc.id })
-                console.log({ id: doc.id, data: doc.data() });
+                array.push({ id: doc.id, ...doc.data(), link: '/produtosPrateleira/' + doc.id })
             })
 
             return res.status(200).json(array)
-            
+
         })
         .catch(next)
 
@@ -157,7 +149,7 @@ function contains(barCode, body) {
         .collection('ProdutosPrateleira')
         .where('codigoBarra', '==', barCode)
         .get()
-        .then(function(result) {
+        .then(function (result) {
             if (!result.empty) {
                 result.forEach(r => {
                     body.produtoPrateleira.id += r.id
