@@ -36,7 +36,6 @@ exports.create = async (req, res, next) => {
 
         })
         .catch((error) => {
-            console.error(`Falha ao cadastrar produto ${req.body.produto.nome} à Rede de Farmacia`, error.message);
             return res.status(500).json({ msg: error.message })
         });
 
@@ -52,9 +51,7 @@ exports.getOne = (req, res, next) => {
         .get()
         .then(doc => {
             if (doc.exists) {
-
                 return res.status(200).json({ id: doc.id, ...doc.data() })
-
             } else {
                 return res.status(404).json({ msg: 'Este produto não foi encontrado' })
             }
@@ -72,7 +69,7 @@ exports.getAll = (req, res, next) => {
         .get()
         .then((snap) => {
             snap.forEach(produto => {
-                produtos.push({ id: produto.id, data: produto.data(), link: `/produtos/${produto.id}` })
+                produtos.push({ id: produto.id, ...produto.data(), link: `/produtos/${produto.id}` })
             })
 
             return res.status(200).json(produtos)
@@ -87,8 +84,6 @@ exports.delete = (req, res, next) => {
     db
         .collection(req.body.connection.collectionName)
         .doc(req.body.connection.contaUsuariosId)
-        .collection('CategoriasProduto')
-        .doc(req.query.categoria)
         .collection('Produtos')
         .doc(req.params.id)
         .get()
@@ -112,8 +107,6 @@ exports.update = (req, res, next) => {
     db
         .collection(req.body.connection.collectionName)
         .doc(req.body.connection.contaUsuariosId)
-        .collection('CategoriasProduto')
-        .doc(req.body.categoria)
         .collection('Produtos')
         .doc(req.params.id)
         .get()
@@ -125,7 +118,7 @@ exports.update = (req, res, next) => {
                             msg: 'Updated Successfuly',
                             result,
                             id: doc.id,
-                            link: process.env.URL_ROOT + '/produto/' + doc.id
+                            link: '/produto/' + doc.id
                         })
                     })
                     .catch(next)
