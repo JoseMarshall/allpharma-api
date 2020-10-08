@@ -7,14 +7,15 @@ const emailSender = require('../email/emailSender');
 
 function generateToken(user, res) {
     jwt.sign({
-            contaUsuariosId: user.contaUsuariosId,
-            collectionName: user.collectionName
-        },
+        contaUsuariosId: user.contaUsuariosId,
+        collectionName: user.collectionName,
+        farmaciaId: user.farmaciaId
+    },
         process.env.JWT_KEY, { expiresIn: '8h' },
 
         (err, token) => {
             if (err) {
-                return res.status(500).send({ error: 'Error generating token '+err.message })
+                return res.status(500).send({ error: 'Error generating token ' + err.message })
             } else {
                 return db
                     .collection('ContaUsuarios')
@@ -31,7 +32,7 @@ function generateToken(user, res) {
 
                         return res.status(200).send({
                             token: token,
-                            link:process.env.URL_ROOT,
+                            link: process.env.URL_ROOT,
                             msg: 'login successfull, verifique o token enviado'
                         })
                     })
@@ -52,10 +53,10 @@ function generateToken(user, res) {
 }
 
 exports.checkAuth = (req, res, next) => {
-    
+
     db
         .collection('ContaUsuarios')
-        .doc(req.body.username||req.query.username)
+        .doc(req.body.username || req.query.username)
         .get()
         .then((doc) => {
             if (doc.exists) {
@@ -64,27 +65,29 @@ exports.checkAuth = (req, res, next) => {
                     passwordHash,
                     //ultimoAcesso,
                     collectionName,
+                    farmaciaId,
                     acessosFalhados
                 } = doc.data()
 
                 if (enabled) {
-                    bcrypt.compare(req.body.password||req.query.password, passwordHash).then(result => {
+                    bcrypt.compare(req.body.password || req.query.password, passwordHash).then(result => {
                         if (result) {
                             //if (ultimoAcesso === null) {
-                                // return res.status(307).send({
-                                //         msg: 'Por favor redefina a sua palavra-passe',
-                                //         username: req.body.username,
-                                //         passwordHash: passwordHash,
-                                //         link: process.env.LINK_RECUPERACAO_SENHA
-                                //     }) //O link para a redefinição de senha
+                            // return res.status(307).send({
+                            //         msg: 'Por favor redefina a sua palavra-passe',
+                            //         username: req.body.username,
+                            //         passwordHash: passwordHash,
+                            //         link: process.env.LINK_RECUPERACAO_SENHA
+                            //     }) //O link para a redefinição de senha
 
                             //} else {
-                                let user = {
-                                    contaUsuariosId: doc.id,
-                                    collectionName
-                                }
-                                return generateToken(user, res)
-                           // }
+                            let user = {
+                                contaUsuariosId: doc.id,
+                                collectionName,
+                                farmaciaId
+                            }
+                            return generateToken(user, res)
+                            // }
                         } else {
 
                             doc.ref
@@ -144,11 +147,11 @@ exports.setNewPassword = (req, res, next) => {
                     if (doc.exists) {
                         if (doc.data().passwordHash === req.body.passwordHash) {
                             doc.ref.update({
-                                    passwordHash: hash,
-                                    codigoVerificacao: null,
-                                    ultimoAcesso: moment().toJSON(),
-                                    enabled: true
-                                })
+                                passwordHash: hash,
+                                codigoVerificacao: null,
+                                ultimoAcesso: moment().toJSON(),
+                                enabled: true
+                            })
                                 .then(() => {
 
                                     let user = {
@@ -190,7 +193,7 @@ exports.setNewPassword = (req, res, next) => {
 exports.requestPassword = (req, res, next) => {
 
     db
-        .collection('ContaUsuarios') 
+        .collection('ContaUsuarios')
         .doc(req.body.username)
         .get()
         .then((doc) => {
@@ -198,9 +201,9 @@ exports.requestPassword = (req, res, next) => {
             if (doc.exists) {
                 const codigoVerificacao = Math.floor((Math.random() * 999999) + 100000)
                 doc.ref.update({
-                        codigoVerificacao: codigoVerificacao,
-                        updatedAt: moment().toJSON()
-                    })
+                    codigoVerificacao: codigoVerificacao,
+                    updatedAt: moment().toJSON()
+                })
                     .then(() => {
 
                         //send a link containing the validationCode and the username byEmail for redefinition of password 

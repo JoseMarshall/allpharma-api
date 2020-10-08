@@ -94,10 +94,13 @@ exports.create = async (req, res, next) => {
                 ultimoAcesso: null,
                 collectionName: req.body.connection.collectionName,
                 contaUsuariosOrganizacaoPai: req.body.connection.contaUsuariosId,
+                farmaciaId: req.body.funcionario.farmacia.farmaciaId,
                 createdAt: moment().toJSON(),
                 updatedAt: null,
                 enabled: true
             }
+
+
 
             //Cria a conta de utilizador
             db.collection('ContaUsuarios')
