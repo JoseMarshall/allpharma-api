@@ -8,6 +8,7 @@
       "AcessosFalhados": 0,
       "Advertencias": 0,
       "UltimoAcesso": "",
+      "farmaciaId": "",
       "CollectionName": "",
       "ContaUsuariosOrganizacaoPai": "",
       "CreatedAt": "",
@@ -118,17 +119,8 @@
           "RedeFarmaciaId": "",
           "Nome": "",
           "Email": "",
-          "Imagens": [
-            {
-              "Perfil": "",
-              "Uploads": [
-                {
-                  "Caminho": "",
-                  "CreatedAt": ""
-                }
-              ]
-            }
-          ],
+          "imageProfile": "",
+          "Imagens": [{ "path": "", "createdAt": "" }],
           "CaixaInicial": 1000000,
           "Endereco": {
             "Provincia": "",
@@ -176,6 +168,12 @@
               "CodigoQR": "",
               "Peso": "",
               "Dosagem": "",
+              "imageProfile": "",
+              "Imagens": [
+                {
+                  "path": ""
+                }
+              ],
               "QuantidadeInicial": 1,
               "QuantidadeDisponivel": 1,
               "PrecoUnitarioVenda": 100,
@@ -184,32 +182,32 @@
               "UpdatedAt": ""
             }
           ],
-          "ProdutosPrateleira": [
-            {
-              "Nome": "",
-              "CodigoBarra": "",
-              "CodigoQR": "",
-              "Peso": "",
-              "Dosagem": "",
-              "Quantidade": 1,
-              "PrecoUnitarioVenda": 100,
-              "Encomendavel": true,
-              "Visivel": true,
-              "Imagens": [
-                {
-                  "Perfil": "",
-                  "Uploads": [
-                    {
-                      "Caminho": "",
-                      "CreatedAt": ""
-                    }
-                  ]
-                }
-              ],
-              "CreatedAt": "",
-              "UpdatedAt": ""
-            }
-          ],
+          // "ProdutosPrateleira": [
+          //   {
+          //     "Nome": "",
+          //     "CodigoBarra": "",
+          //     "CodigoQR": "",
+          //     "Peso": "",
+          //     "Dosagem": "",
+          //     "Quantidade": 1,
+          //     "PrecoUnitarioVenda": 100,
+          //     "Encomendavel": true,
+          //     "Visivel": true,
+          //     "Imagens": [
+          //       {
+          //         "Perfil": "",
+          //         "Uploads": [
+          //           {
+          //             "Caminho": "",
+          //             "CreatedAt": ""
+          //           }
+          //         ]
+          //       }
+          //     ],
+          //     "CreatedAt": "",
+          //     "UpdatedAt": ""
+          //   }
+          // ],
           "Vendas": [
             {
               "Descricao": "",
