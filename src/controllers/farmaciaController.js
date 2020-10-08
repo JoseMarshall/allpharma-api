@@ -1,7 +1,6 @@
-require('dotenv').config({ path: '../' })
-const { db, admin, config } = require('../credentials/admin')
+const { db } = require('../credentials/admin')
 const moment = require('moment');
-
+const { cloudinary } = require('../cloudinary')
 // "Farmacias": [{
 // "RedeFarmaciaId":"",
 //     "Nome": "",
@@ -22,32 +21,18 @@ const moment = require('moment');
 //     "UpdatedAt": ""
 // }]
 
-
-exports.create = async (req, res, next) => {
+exports.create = (req, res, next) => {
 
     req.body.farmacia.updatedAt = null
     req.body.farmacia.createdAt = moment().toJSON()
     req.body.farmacia.redeFarmaciaId = req.body.connection.contaUsuariosId
-
-    let img = {
-        imageProfile: "https://firebasestorage.googleapis.com/v0/b/allpharma-e8f00.appspot.com/o/blankProfile.png?alt=media",
-        uploads: []
-    }
 
     db
         .collection(req.body.connection.collectionName)
         .doc(req.body.connection.contaUsuariosId)
         .collection('Farmacias')
         .add(req.body.farmacia)
-        .then(function (doc) {
-            //Adiciona a imagem de perfil padrão  à farmácia
-            db
-                .collection(req.body.connection.collectionName)
-                .doc(req.body.connection.contaUsuariosId)
-                .collection('Farmacias')
-                .doc(doc.id)
-                .collection('Imagens')
-                .add(img)
+        .then((doc) => {
 
             return res.status(201).json({ msg: `Farmácia ${req.body.farmacia.nome} criado com sucesso ` })
 
@@ -59,23 +44,6 @@ exports.create = async (req, res, next) => {
 
 }
 
-// "Comentarios": [{
-//     "Classificacao": 5,
-//     "Message": {
-//         "From": "",
-//         "Subject": "",
-//         "Text": "",
-//         "CreatedAt": "",
-//         "UpdatedAt": ""
-//     },
-//     "Respostas": [{
-//         "From": "",
-//         "Text": "",
-//         "CreatedAt": "",
-//         "UpdatedAt": ""
-//     }]
-// }]
-
 exports.getOne = (req, res, next) => {
     db
         .collection('RedeFarmacias')
@@ -86,53 +54,19 @@ exports.getOne = (req, res, next) => {
         .then(async (doc) => {
 
             if (doc.exists) {
-                let imageProfile = '', uploads = [];
-                const comentarios = []
+                let imagesUploaded = [];
                 await doc.ref
                     .collection('Imagens')
                     .get()
-                    .then(async (snap) => {
-                        if (!snap.empty) {
-                            imageProfile = snap.docs[0].data().imageProfile
-                            uploads = snap.docs[0].data().uploads
+                    .then((snap) => {
+                        for (const image of snap.docs) {
+                            imagesUploaded.push(image.data())
                         }
-                        await doc.ref
-                            .collection('Comentarios')
-                            .get()
-                            .then(async (comments) => {
-                                for (const comment of comments.docs) {
-                                    let obj = {
-                                        id: comment.id,
-                                        ...comment.data(),
-                                        respostas: []
-                                    }
-                                    await comment.ref
-                                        .collection('Respostas')
-                                        .get()
-                                        .then((snapRespostas) => {
-                                            if (!snapRespostas.empty) {
-                                                for (const resposta of snapRespostas.docs) {
-                                                    obj.respostas.push({
-                                                        id: resposta.id,
-                                                        ...resposta.data()
-                                                    })
-                                                }
-                                                comentarios.push(obj)
-                                            }
-                                        })
-                                        .catch(next)
-                                }
+                        return res.status(200).json({
+                            ...doc.data(),
+                            imagesUploaded,
+                        })
 
-                                return res.status(200).json({
-                                    farmacia: {
-                                        ...doc.data(),
-                                        imagens: { imageProfile, uploads },
-                                        comentarios
-                                    },
-                                })
-
-                            })
-                            .catch(next)
                     })
                     .catch(next)
 
@@ -334,140 +268,82 @@ exports.updateEncomenda = (req, res, next) => {
 }
 
 exports.setImageProfile = (req, res, next) => {
+    const path = Object.values(Object.values(req.files)[0])[0].path
+    cloudinary.uploader.upload(path)
+        .then(image => {
+            db
+                .collection('RedeFarmacias')
+                .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
+                .collection('Farmacias')
+                .doc(req.params.id)
+                .update({
+                    imageProfile: image.url
+                })
+                .then(() => res.status(201).json({ msg: 'Image profile updated successfully', filePath: image.url }))
+                .catch(next)
+        })
+        .catch(next)
+}
 
-    const BusBoy = require('busboy');
-    const fs = require('fs');
-    const os = require('os');
-    const path = require('path');
-    const guid = require('guid');
+exports.removeImageProfile = (req, res, next) => {
 
-    const busboy = new BusBoy({ headers: req.headers });
-
-    let imageFileName;
-    let imageToBeUploaded = {};
-    let myGuid = guid.create().value
-
-    busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-        if (mimetype !== 'image/jpeg' && mimetype !== 'image/png') {
-            return res.status(204).json({ msg: 'Formato do ficheiro inválido, só são permitidos ficheiros do tipo .jpg ou .png ou jpeg' })
-        }
-        let myArray = filename.split('.')
-        const imageExtension = myArray[myArray.length - 1]
-        imageFileName = `${myGuid}.${imageExtension}`
-        const filePath = path.join(os.tmpdir(), imageFileName)
-        imageToBeUploaded = { filePath, mimetype }
-        file.pipe(fs.createWriteStream(filePath))
-    });
-
-    busboy.on('finish', () => {
-
-
-        admin
-            .storage()
-            .bucket('allpharma-e8f00.appspot.com')
-            .upload(imageToBeUploaded.filePath, {})
-            .then(() => {
-                admin
-                    .storage()
-                    .bucket('allpharma-e8f00.appspot.com')
-                    .file(imageFileName)
-
-
-                const imageURL = `https//firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media&token=${myGuid}`
-                return db
-                    .collection('RedeFarmacias')
-                    .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
-                    .collection('Farmacias')
-                    .doc(req.params.id)
-                    .collection('Imagens')
-                    .get()
-                    .then((snap) => {
-                        if (!snap.empty) {
-                            snap.docs[0].ref
-                                .update({
-                                    perfil: imageURL
-                                })
-                        }
-                    })
-                    .catch(next)
-
-
-            })
-            .then(() => {
-                return res.status(201).json({ msg: 'Updated Successfully' })
-            })
-            .catch(next)
-    })
-
-    busboy.end(req.rawBody)
+    const imageProfile = cloudinary.image('blankProfile_k982nd.png')
+    db
+        .collection('RedeFarmacias')
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
+        .collection('Farmacias')
+        .doc(req.params.id)
+        .update({
+            imageProfile
+        })
+        .then(() => res.status(201).json({ msg: 'Image profile updated successfully', filePath: image.url }))
+        .catch(next)
 
 }
 
 exports.uploadImage = (req, res, next) => {
+    const success = []
+    const errors = []
+    const types = ['image/png', 'image/jpeg', 'image/jpg']
+    const { files } = req
 
-    const BusBoy = require('busboy');
-    const fs = require('fs');
-    const os = require('os');
-    const path = require('path');
-    const guid = require('guid');
-
-    const busboy = new BusBoy({ headers: req.headers });
-
-    let imageFileName;
-    let imageToBeUploaded = {};
-
-
-    busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-        if (mimetype !== 'image/jpeg' && mimetype !== 'image/png') {
-            return res.status(204).json({ msg: 'Formato do ficheiro inválido, só são permitidos ficheiros do tipo .jpg ou .png ou jpeg' })
+    /**
+     * Catching files with wrong format
+     */
+    for (const file of files) {
+        if (!types.includes(file, type)) {
+            errors.push(`'${file.type}' of file '${file.path}' is not a supported format`)
         }
-        let myArray = filename.split('.')
-        const imageExtension = myArray[myArray.length - 1]
-        imageFileName = `${guid.create().value}.${imageExtension}`
-        const filePath = path.join(os.tmpdir(), imageFileName)
-        imageToBeUploaded = { filePath, mimetype }
-        file.pipe(fs.createWriteStream(filePath))
-    });
-
-    busboy.on('finish', () => {
-        admin
-            .storage()
-            .bucket()
-            .upload(imageToBeUploaded.filePath, {
-                resumable: false,
-                metadata: {
-                    metadata: {
-                        contentType: imageToBeUploaded.mimetype
-                    }
-                }
-            })
-            .then(() => {
-                const imageURL = `https//firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`
-                return db
+        else {
+            cloudinary.uploader.upload(file.path).then((uploadeImage) => {
+                db
                     .collection('RedeFarmacias')
                     .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
                     .collection('Farmacias')
                     .doc(req.params.id)
                     .collection('Imagens')
-                    .get()
-                    .then((snap) => {
-                        if (!snap.empty) {
-                            snap.docs[0].ref
-                                .collection('Uploads')
-                                .add({
-                                    caminho: imageURL,
-                                    createdAt: moment().toJSON()
-                                })
-                        }
+                    .add({
+                        imageURL: uploadeImage.url,
+                        createdAt: moment().toJSON()
                     })
+                    .then(() => success.push(uploadeImage.url))
+                    .catch(next)
+            })
+        }
+    }
 
-            })
-            .then(() => {
-                return res.status(201).json({ msg: 'Upload Successfully' })
-            })
-            .catch(next)
+    if (errors.length) {
+        return res.status(406).json({ msg: 'Formato do ficheiro inválido, só são permitidos ficheiros do tipo .jpg ou .png ou jpeg', errors })
+    }
+    else {
+        return res.status(201).json({ msg: 'Imagens carregadas som sucesso', success })
+
+    }
+}
+
+exports.deleteImages = (req, res, next) => {
+    cloudinary.api.delete_resources(req.body.fileNames).then((result) => {
+        return res.status(200).json({ msg: 'Imagens apagadas som sucesso', result })
     })
-
-    busboy.end(req.rawBody)
-
+        .catch(next)
 }
