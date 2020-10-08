@@ -5,6 +5,7 @@ const signUp = require('./midlewares/signup');
 const redefinePassword = require('./midlewares/auth');
 const cors = require('cors')
 const { checkToken } = require('./midlewares/checkToken');
+const formData = require('express-form-data')
 
 const redeFarmaciaRouter = require('./routes/redeFarmacia');
 const perfilRouter = require('./routes/perfil');
@@ -35,10 +36,9 @@ const stockRouter = require('./routes/stock');
 const vendasRouter = require('./routes/vendas');
 
 const app = express()
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
+app.use(formData.parse())
 //============================      CORS       ===========================
 const whitelist = [
     process.env.URL_ROOT,
