@@ -68,7 +68,7 @@ const bcrypt = require('bcrypt')
 
 // }]
 exports.create = async (req, res, next) => {
-
+    req.body.contaUsuarios = {}
     await CheckerController.generateNewCredentials(req.body).then(async (x) => {
         req.body.contaUsuarios.userName = x.userName
         req.body.contaUsuarios.password = x.password
@@ -133,7 +133,7 @@ exports.create = async (req, res, next) => {
                                 .set(req.body.funcionario)
                                 .then(() => {
                                     return res.status(201).json({
-                                        msg: `Funcionario ${req.body.funcionario.nome} criado com sucesso `
+                                        msg: `Funcionario ${req.body.funcionario.nome.completo} criado com sucesso `
                                     })
                                 })
 

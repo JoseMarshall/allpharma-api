@@ -15,8 +15,9 @@ const clientePacienteController = require('../controllers/clientePacienteControl
 
 
 
-exports.createAccount = async(req, res, next) => {
-    await CheckerController.generateNewCredentials(req.body).then(async(x) => {
+exports.createAccount = async (req, res, next) => {
+    req.body.contaUsuarios = {}
+    await CheckerController.generateNewCredentials(req.body).then(async (x) => {
         req.body.contaUsuarios.userName = x.userName
         req.body.contaUsuarios.password = x.password
         console.log(req.body.contaUsuarios);
@@ -49,7 +50,7 @@ exports.createAccount = async(req, res, next) => {
 
             db.collection('ContaUsuarios')
                 .doc(req.body.contaUsuarios.userName)
-                .set(newAccount) 
+                .set(newAccount)
                 .then(ref => {
                     console.log('Criada a conta com o ID: ', req.body.contaUsuarios.userName);
 
