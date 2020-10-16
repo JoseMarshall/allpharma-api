@@ -75,7 +75,7 @@ exports.create = async (req, res, next) => {
     })
 
     let passwordHash;
-    let codeVerification = await Math.floor((Math.random() * 999999) + 100000) //O codigo que será enviado por email para o usuario, para que ele possa verificar o seu email
+    let codeVerification = Math.floor((Math.random() * 999999) + 100000) //O codigo que será enviado por email para o usuario, para que ele possa verificar o seu email
 
     //Encripta a password 
     bcrypt.hash(req.body.contaUsuarios.password, 10)
@@ -107,7 +107,6 @@ exports.create = async (req, res, next) => {
                 .doc(req.body.contaUsuarios.userName)
                 .set(newAccount)
                 .then(() => {
-                    console.log('Added document with ID: ', req.body.contaUsuarios.userName);
 
                     //Grava os dados do funcionario na coleção funcionariosFarmacia
                     req.body.funcionario.updatedAt = null
@@ -119,14 +118,10 @@ exports.create = async (req, res, next) => {
                         .doc(req.body.contaUsuarios.userName)
                         .set({ contaUsuariosId: req.body.contaUsuarios.userName, ...req.body.funcionario })
                         .then(function () {
-                            console.log(`Funcionario ${req.body.funcionario.nome} criado com sucesso `);
 
                             emailSender.sendEmailSignUp(req.body.contaUsuarios.userName,
                                 req.body.contaUsuarios.password,
                                 req.body.funcionario.email)
-
-                            //Regista na coleção funcionarios que esta dentro da coleção farmacias
-                            delete req.body.funcionario.menus
 
                             db
                                 .collection(req.body.connection.collectionName)
@@ -151,12 +146,10 @@ exports.create = async (req, res, next) => {
 
                 })
                 .catch((err) => {
-                    console.error('Algo correu mal :(', err)
                     return res.status(500).json({ msg: err.message, code: err.code })
                 });
 
         }).catch((err) => {
-            console.error(err);
             return res.status(500).json({ msg: 'Alguma coisa correu mal', erro: err.message })
         })
 

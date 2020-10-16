@@ -34,7 +34,7 @@ exports.create = (req, res, next) => {
         .add(req.body.farmacia)
         .then((doc) => {
 
-            return res.status(201).json({ msg: `Farmácia ${req.body.farmacia.nome} criado com sucesso ` })
+            return res.status(201).json({ msg: `Farmácia ${req.body.farmacia.nome} criado com sucesso `, id: doc.id })
 
         })
         .catch(function (error) {
@@ -54,21 +54,10 @@ exports.getOne = (req, res, next) => {
         .then(async (doc) => {
 
             if (doc.exists) {
-                let imagesUploaded = [];
-                await doc.ref
-                    .collection('Imagens')
-                    .get()
-                    .then((snap) => {
-                        for (const image of snap.docs) {
-                            imagesUploaded.push(image.data())
-                        }
-                        return res.status(200).json({
-                            ...doc.data(),
-                            imagesUploaded,
-                        })
 
-                    })
-                    .catch(next)
+                return res.status(200).json({
+                    ...doc.data(),
+                })
 
             } else {
                 return res.status(404).json({ msg: 'Esta Farmácia não foi encontrado' })
@@ -323,7 +312,7 @@ exports.uploadImage = (req, res, next) => {
                     .doc(req.params.id)
                     .collection('Imagens')
                     .add({
-                        imageURL: uploadeImage.url,
+                        path: uploadeImage.public_id,
                         createdAt: moment().toJSON()
                     })
                     .then(() => success.push(uploadeImage.url))
@@ -339,6 +328,39 @@ exports.uploadImage = (req, res, next) => {
         return res.status(201).json({ msg: 'Imagens carregadas som sucesso', success })
 
     }
+}
+
+exports.getAllImages = (req, res, next) => {
+    const imagesURL = []
+
+    // const { width, height } = req.query
+    // if (!width) {
+    //     width = 340
+    // }
+    // if (!height) {
+    //     height = 240
+    // }
+
+    db
+        .collection('RedeFarmacias')
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
+        .collection('Farmacias')
+        .doc(req.params.id)
+        .collection('Imagens')
+        .get()
+        .then((snap) => {
+            for (const imagePublicId of snap.docs) {
+                imagesURL.push(
+                    // cloudinary.url(
+                    imagePublicId.data().path
+                    // , { width, height, crop: "fill" })
+                )
+            }
+            return res.status(200).json({ imagesURL })
+        })
+        .catch(next)
+
+
 }
 
 exports.deleteImages = (req, res, next) => {
