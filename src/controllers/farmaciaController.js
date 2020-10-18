@@ -80,7 +80,6 @@ exports.getAll = (req, res, next) => {
         .then((snap) => {
             snap.forEach((doc) => {
                 array.push({ id: doc.id, ...doc.data(), link: '/farmacias/' + doc.id })
-                console.log({ id: doc.id, ...doc.data() });
             })
             return res.status(200).json(array)
 
@@ -153,7 +152,6 @@ exports.getOneEncomenda = (req, res, next) => {
         .get()
         .then(doc => {
             if (doc.exists) {
-                console.log(doc.data());
                 return res.status(200).json(doc.data())
 
             } else {
@@ -176,11 +174,6 @@ exports.getAllEncomenda = (req, res, next) => {
 
             snap.docs.map(doc => {
                 array.push({ id: doc.id, data: doc.data(), link: '/farmacia/encomenda/' + doc.id })
-                console.log({
-                    id: doc.id,
-                    data: doc.data()
-                });
-
             })
             return res.status(200).json(array)
 
@@ -291,55 +284,26 @@ exports.removeImageProfile = (req, res, next) => {
 }
 
 exports.uploadImage = (req, res, next) => {
-    const success = []
-    const errors = []
-    const types = ['image/png', 'image/jpeg', 'image/jpg']
-    const { files } = req
+    const { filePath } = req.body
 
-    /**
-     * Catching files with wrong format
-     */
-    for (const file of files) {
-        if (!types.includes(file, type)) {
-            errors.push(`'${file.type}' of file '${file.path}' is not a supported format`)
-        }
-        else {
-            cloudinary.uploader.upload(file.path).then((uploadeImage) => {
-                db
-                    .collection('RedeFarmacias')
-                    .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
-                    .collection('Farmacias')
-                    .doc(req.params.id)
-                    .collection('Imagens')
-                    .add({
-                        path: uploadeImage.public_id,
-                        createdAt: moment().toJSON()
-                    })
-                    .then(() => success.push(uploadeImage.url))
-                    .catch(next)
-            })
-        }
-    }
+    db
+        .collection('RedeFarmacias')
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
+        .collection('Farmacias')
+        .doc(req.params.id)
+        .collection('Imagens')
+        .add({
+            path: filePath,
+            createdAt: moment().toJSON()
+        })
+        .then(() => res.status(201).json({ msg: 'Imagens carregadas com sucesso', sucess: true }))
+        .catch(next)
 
-    if (errors.length) {
-        return res.status(406).json({ msg: 'Formato do ficheiro inválido, só são permitidos ficheiros do tipo .jpg ou .png ou jpeg', errors })
-    }
-    else {
-        return res.status(201).json({ msg: 'Imagens carregadas som sucesso', success })
 
-    }
 }
 
 exports.getAllImages = (req, res, next) => {
     const imagesURL = []
-
-    // const { width, height } = req.query
-    // if (!width) {
-    //     width = 340
-    // }
-    // if (!height) {
-    //     height = 240
-    // }
 
     db
         .collection('RedeFarmacias')
@@ -351,9 +315,7 @@ exports.getAllImages = (req, res, next) => {
         .then((snap) => {
             for (const imagePublicId of snap.docs) {
                 imagesURL.push(
-                    // cloudinary.url(
                     imagePublicId.data().path
-                    // , { width, height, crop: "fill" })
                 )
             }
             return res.status(200).json({ imagesURL })
