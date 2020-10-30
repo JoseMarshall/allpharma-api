@@ -23,6 +23,7 @@
       "Proprietario": {
         "PrimeiroNome": "",
         "Apelido": "",
+        "BI": "",
         "NomeCompleto": "",
         "DataNascimneto": ""
       },
@@ -135,7 +136,7 @@
           "Telefones": [""],
           "Funcionarios": [
             {
-              "NumIdentificacao": "",
+              "BI": "",
               "Nome": {
                 "Primeiro": "",
                 "Apelido": "",
@@ -149,12 +150,6 @@
               "Genero": "",
               "Perfil": "",
               "Endereco": {
-                "Provincia": "",
-                "Municipio": "",
-                "Bairro": "",
-                "Rua": "",
-                "Andar": "",
-                "NumPorta": "",
                 "Latitude": "",
                 "Longitude": ""
               },
@@ -182,32 +177,32 @@
               "UpdatedAt": ""
             }
           ],
-          // "ProdutosPrateleira": [
-          //   {
-          //     "Nome": "",
-          //     "CodigoBarra": "",
-          //     "CodigoQR": "",
-          //     "Peso": "",
-          //     "Dosagem": "",
-          //     "Quantidade": 1,
-          //     "PrecoUnitarioVenda": 100,
-          //     "Encomendavel": true,
-          //     "Visivel": true,
-          //     "Imagens": [
-          //       {
-          //         "Perfil": "",
-          //         "Uploads": [
-          //           {
-          //             "Caminho": "",
-          //             "CreatedAt": ""
-          //           }
-          //         ]
-          //       }
-          //     ],
-          //     "CreatedAt": "",
-          //     "UpdatedAt": ""
-          //   }
-          // ],
+          "ProdutosPrateleira": [
+            {
+              "Nome": "",
+              "CodigoBarra": "",
+              "CodigoQR": "",
+              "Peso": "",
+              "Dosagem": "",
+              "Quantidade": 1,
+              "PrecoUnitarioVenda": 100,
+              "Encomendavel": true,
+              "Visivel": true,
+              "Imagens": [
+                {
+                  "Perfil": "",
+                  "Uploads": [
+                    {
+                      "Caminho": "",
+                      "CreatedAt": ""
+                    }
+                  ]
+                }
+              ],
+              "CreatedAt": "",
+              "UpdatedAt": ""
+            }
+          ],
           "Vendas": [
             {
               "Descricao": "",

@@ -66,7 +66,8 @@ exports.checkAuth = (req, res, next) => {
                     //ultimoAcesso,
                     collectionName,
                     farmaciaId,
-                    acessosFalhados
+                    acessosFalhados,
+                    contaUsuariosOrganizacaoPai
                 } = doc.data()
 
                 if (enabled) {
@@ -84,6 +85,7 @@ exports.checkAuth = (req, res, next) => {
                             let user = {
                                 contaUsuariosId: doc.id,
                                 collectionName,
+                                contaUsuariosOrganizacaoPai,
                                 farmaciaId
                             }
                             return generateToken(user, res)
