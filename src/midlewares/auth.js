@@ -9,6 +9,7 @@ function generateToken(user, res) {
     jwt.sign({
         contaUsuariosId: user.contaUsuariosId,
         collectionName: user.collectionName,
+        contaUsuariosOrganizacaoPai: user.contaUsuariosOrganizacaoPai,
         farmaciaId: user.farmaciaId
     },
         process.env.JWT_KEY, { expiresIn: '8h' },
@@ -66,7 +67,8 @@ exports.checkAuth = (req, res, next) => {
                     //ultimoAcesso,
                     collectionName,
                     farmaciaId,
-                    acessosFalhados
+                    acessosFalhados,
+                    contaUsuariosOrganizacaoPai
                 } = doc.data()
 
                 if (enabled) {
@@ -84,6 +86,7 @@ exports.checkAuth = (req, res, next) => {
                             let user = {
                                 contaUsuariosId: doc.id,
                                 collectionName,
+                                contaUsuariosOrganizacaoPai,
                                 farmaciaId
                             }
                             return generateToken(user, res)
