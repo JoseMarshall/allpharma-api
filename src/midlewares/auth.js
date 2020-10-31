@@ -9,6 +9,7 @@ function generateToken(user, res) {
     jwt.sign({
         contaUsuariosId: user.contaUsuariosId,
         collectionName: user.collectionName,
+        contaUsuariosOrganizacaoPai: user.contaUsuariosOrganizacaoPai,
         farmaciaId: user.farmaciaId
     },
         process.env.JWT_KEY, { expiresIn: '8h' },
