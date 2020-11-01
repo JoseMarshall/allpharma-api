@@ -47,7 +47,7 @@ exports.create = (req, res, next) => {
 exports.getOne = (req, res, next) => {
     db
         .collection('RedeFarmacias')
-        .doc(req.body.connection.contaUsuariosId || req.body.farmacia.redeFarmaciaId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Farmacias')
         .doc(req.params.id)
         .get()
@@ -71,7 +71,7 @@ exports.getAll = (req, res, next) => {
     let array = []
     db
         .collection('RedeFarmacias')
-        .doc(req.body.connection.contaUsuariosId || req.body.farmacia.redeFarmaciaId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Farmacias')
         .orderBy('createdAt')
         .limit(20)

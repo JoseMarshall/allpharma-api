@@ -53,7 +53,7 @@ const moment = require('moment');
 //     "UpdatedAt": ""
 // }]
 
-exports.create = async(req, res, next) => {
+exports.create = async (req, res, next) => {
 
     let movimentos = []
 
@@ -85,21 +85,21 @@ exports.create = async(req, res, next) => {
         movimentos.push(myObj2)
     })
 
-    if (req.body.vendas.registaTroco) {
-        const myObj = {
-            referencia: guid.create().value,
-            debito: req.body.vendas.troco,
-            credito: 0,
-            planoContas: {
-                numeroConta: "37",
-                descricaoConta: "Outros Valores a Receber e a Pagar"
-            },
-            createdAt: moment().toJSON(),
-            updatedAt: null
-        }
-        registoTrocoController(req)
-        movimentos.push(myObj)
-    }
+    // if (req.body.vendas.registaTroco) {
+    //     const myObj = {
+    //         referencia: guid.create().value,
+    //         debito: req.body.vendas.troco,
+    //         credito: 0,
+    //         planoContas: {
+    //             numeroConta: "37",
+    //             descricaoConta: "Outros Valores a Receber e a Pagar"
+    //         },
+    //         createdAt: moment().toJSON(),
+    //         updatedAt: null
+    //     }
+    //     registoTrocoController(req)
+    //     movimentos.push(myObj)
+    // }
 
     req.body.vendas.movimentosVenda = movimentos
     req.body.vendas.updatedAt = null
@@ -112,12 +112,12 @@ exports.create = async(req, res, next) => {
         .doc(req.body.farmacia.farmaciaId)
         .collection('Vendas')
         .add(req.body.vendas)
-        .then(function() {
+        .then(function () {
             console.log(`Vendas ${req.body.vendas.descricao} criada com sucesso `);
             return res.status(201).json({ msg: `Vendas ${req.body.vendas.descricao} criada com sucesso ` })
 
         })
-        .catch(function(error) {
+        .catch(function (error) {
             console.error(`Falha ao cadastrar Vendas ${req.body.vendas.descricao} a Rede de Farmacia`, error.message);
             return res.status(500).json({ msg: error.message })
         });
@@ -153,17 +153,17 @@ exports.getAll = (req, res, next) => {
         .collection('RedeFarmacias')
         .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Farmacias')
-        .doc(req.body.farmacia.farmaciaId)
+        .doc(req.params.farmaciaId)
         .collection('Vendas')
         .get()
-        .then((snap) => {            
+        .then((snap) => {
             snap.docs.map(doc => {
                 array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/vendas/' + doc.id })
                 console.log({ id: doc.id, data: doc.data() });
             })
 
             return res.status(200).json(array)
-           
+
         })
         .catch(next)
 

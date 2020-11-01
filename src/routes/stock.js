@@ -4,9 +4,9 @@ const controller = require('../controllers/stockController')
 
 router.post('/', controller.create)
 
-router.get('/:id', controller.getOne)
+router.get('/farmacias/:farmaciaId', controller.getAll)
 
-router.get('/', controller.getAll)
+router.get('/:id', controller.getOne)
 
 router.delete('/:id', controller.delete)
 

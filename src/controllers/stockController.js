@@ -95,7 +95,7 @@ exports.getAll = (req, res, next) => {
         .collection('RedeFarmacias')
         .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Farmacias')
-        .doc(req.body.farmacia.farmaciaId)
+        .doc(req.params.farmaciaId)
         .collection('Stocks')
         .get()
         .then((snap) => {
