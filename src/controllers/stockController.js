@@ -28,7 +28,7 @@ exports.create = async (req, res, next) => {
             .collection('RedeFarmacias')
             .doc(req.body.connection.contaUsuariosId)
             .collection('Farmacias')
-            .doc(req.body.farmacia.farmaciaId)
+            .doc(req.params.farmaciaId)
             .collection('Stocks')
             .add(req.body.stock)
             .then(function (result) {
@@ -46,7 +46,7 @@ exports.create = async (req, res, next) => {
             .collection('RedeFarmacias')
             .doc(req.body.connection.contaUsuariosId)
             .collection('Farmacias')
-            .doc(req.body.farmacia.farmaciaId)
+            .doc(req.params.farmaciaId)
             .collection('Stocks')
             .doc(stock.id)
             .get()
@@ -73,7 +73,7 @@ exports.getOne = (req, res, next) => {
         .collection('RedeFarmacias')
         .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Farmacias')
-        .doc(req.body.farmacia.farmaciaId)
+        .doc(req.params.farmaciaId)
         .collection('Stocks')
         .doc(req.params.id)
         .get()
@@ -111,12 +111,43 @@ exports.getAll = (req, res, next) => {
 }
 
 
+exports.update = (req, res, next) => {
+
+    const stockCollection = db
+        .collection('RedeFarmacias')
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
+        .collection('Farmacias')
+        .doc(req.params.farmaciaId)
+        .collection('Stocks')
+    req.body.newStock.forEach((product) => {
+        stockCollection.doc(product.id)
+            .update(product)
+            .then((result) => {
+                if (!res.headersSent) {
+                    res.status(201).send({
+                        msg: 'Updated Successfuly',
+                        result
+                    })
+                }
+            })
+            .catch((error) => {
+                if (!res.headersSent) {
+                    res.status(500).send({
+                        msg: 'Error while updating',
+                        error
+                    })
+                }
+            })
+    })
+
+}
+
 exports.delete = (req, res, next) => {
     db
         .collection('RedeFarmacias')
         .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Farmacias')
-        .doc(req.body.farmacia.farmaciaId)
+        .doc(req.params.farmaciaId)
         .collection('Stocks')
         .doc(req.params.id)
         .get()
@@ -137,13 +168,13 @@ exports.delete = (req, res, next) => {
 }
 
 
-async function contains(barCode, req) {
+async function contains(barCode, { body, params }) {
     let obj
     await db
         .collection('RedeFarmacias')
-        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
+        .doc(body.connection.contaUsuariosOrganizacaoPai || body.connection.contaUsuariosId)
         .collection('Farmacias')
-        .doc(req.body.farmacia.farmaciaId)
+        .doc(params.farmaciaId)
         .collection('Stocks')
         .where('codigoBarra', '==', barCode)
         .get()
