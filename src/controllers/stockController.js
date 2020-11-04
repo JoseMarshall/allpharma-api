@@ -120,7 +120,9 @@ exports.update = (req, res, next) => {
         .doc(req.params.farmaciaId)
         .collection('Stocks')
     req.body.newStock.forEach((product) => {
-        stockCollection.doc(product.id)
+        const { id } = product
+        delete product.id
+        stockCollection.doc(id)
             .update(product)
             .then((result) => {
                 if (!res.headersSent) {
