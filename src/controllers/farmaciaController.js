@@ -284,7 +284,7 @@ exports.removeImageProfile = (req, res, next) => {
 }
 
 exports.uploadImage = (req, res, next) => {
-    const { filePath } = req.body
+    const { filePath, publicId } = req.body
 
     db
         .collection('RedeFarmacias')
@@ -293,6 +293,7 @@ exports.uploadImage = (req, res, next) => {
         .doc(req.params.id)
         .collection('Imagens')
         .add({
+            publicId,
             path: filePath,
             createdAt: moment().toJSON()
         })
@@ -314,8 +315,9 @@ exports.getAllImages = (req, res, next) => {
         .get()
         .then((snap) => {
             for (const imagePublicId of snap.docs) {
+                const { path, publicId } = imagePublicId.data()
                 imagesURL.push(
-                    imagePublicId.data().path
+                    { path, publicId }
                 )
             }
             return res.status(200).json({ imagesURL })
@@ -324,9 +326,59 @@ exports.getAllImages = (req, res, next) => {
 
 
 }
+function deleteQueryBatch(db, query, batchSize, resolve, reject) {
+    query.get()
+        .then((snapshot) => {
+            // When there are no documents left, we are done
+            if (snapshot.size == 0) {
+                return 0;
+            }
+
+            // Delete documents in a batch
+            let batch = db.batch();
+            snapshot.docs.forEach((doc) => {
+                batch.delete(doc.ref);
+            });
+
+            return batch.commit().then(() => {
+                return snapshot.size;
+            });
+        }).then((numDeleted) => {
+            if (numDeleted === 0) {
+                resolve();
+                return;
+            }
+
+            // Recurse on the next process tick, to avoid
+            // exploding the stack.
+            process.nextTick(() => {
+                deleteQueryBatch(db, query, batchSize, resolve, reject);
+            });
+        })
+        .catch(reject);
+}
+function deleteCollection(db, collectionRef, batchSize) {
+    let query = collectionRef.limit(batchSize);
+
+    return new Promise((resolve, reject) => {
+        deleteQueryBatch(db, query, batchSize, resolve, reject);
+    });
+}
 
 exports.deleteImages = (req, res, next) => {
-    cloudinary.api.delete_resources(req.body.fileNames).then((result) => {
+    const pharmacy =
+        db
+            .collection('RedeFarmacias')
+            .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
+            .collection('Farmacias')
+            .doc(req.params.id)
+    req.body.publicIdToRemove.map(publicId => {
+        const collection = pharmacy.collection('Imagens')
+            .where("publicId", "==", publicId)
+        deleteCollection(db, collection, 10)
+
+    })
+    cloudinary.api.delete_resources(req.body.publicIdToRemove).then((result) => {
         return res.status(200).json({ msg: 'Imagens apagadas som sucesso', result })
     })
         .catch(next)
