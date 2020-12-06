@@ -13,7 +13,7 @@ router.get('/:id/images', farmaciaController.getAllImages)
 
 router.post('/:id/images', farmaciaController.uploadImage)
 
-router.delete('/images/:id', farmaciaController.deleteImages)
+router.delete('/:id/images', farmaciaController.deleteImages)
 
 router.post('/', farmaciaController.create)
 
