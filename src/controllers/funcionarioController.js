@@ -160,7 +160,7 @@ exports.create = async (req, res, next) => {
 exports.getOne = (req, res, next) => {
     db
         .collection(req.body.connection.collectionName)
-        .doc(req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Funcionarios')
         .doc(req.params.id)
         .get()
@@ -178,7 +178,7 @@ exports.getAll = (req, res, next) => {
     let array = []
     db
         .collection(req.body.connection.collectionName)
-        .doc(req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Funcionarios')
         .get()
         .then((snap) => {
@@ -197,7 +197,7 @@ exports.getAll = (req, res, next) => {
 exports.delete = (req, res, next) => {
     db
         .collection(req.body.connection.collectionName)
-        .doc(req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Funcionarios')
         .doc(req.params.id)
         .get()
@@ -220,7 +220,7 @@ exports.delete = (req, res, next) => {
 exports.update = (req, res, next) => {
     db
         .collection(req.body.connection.collectionName)
-        .doc(req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Funcionarios')
         .doc(req.params.id)
         .get()
@@ -230,7 +230,7 @@ exports.update = (req, res, next) => {
                 const { farmaciaId } = doc.data().farmacia
                 db
                     .collection(req.body.connection.collectionName)
-                    .doc(req.body.connection.contaUsuariosId)
+                    .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
                     .collection('Farmacias')
                     .doc(farmaciaId)
                     .collection('Funcionarios')

@@ -28,7 +28,7 @@ exports.create = async (req, res, next) => {
 
     db
         .collection(req.body.connection.collectionName)
-        .doc(req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Produtos')
         .add(req.body.produto)
         .then((doc) => {
@@ -45,7 +45,7 @@ exports.create = async (req, res, next) => {
 exports.getOne = (req, res, next) => {
     db
         .collection(req.body.connection.collectionName)
-        .doc(req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Produtos')
         .doc(req.params.id)
         .get()
@@ -64,7 +64,7 @@ exports.getAll = (req, res, next) => {
     let produtos = []
     db
         .collection(req.body.connection.collectionName)
-        .doc(req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Produtos')
         .get()
         .then((snap) => {
@@ -83,7 +83,7 @@ exports.getAll = (req, res, next) => {
 exports.delete = (req, res, next) => {
     db
         .collection(req.body.connection.collectionName)
-        .doc(req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Produtos')
         .doc(req.params.id)
         .get()
@@ -106,7 +106,7 @@ exports.delete = (req, res, next) => {
 exports.update = (req, res, next) => {
     db
         .collection(req.body.connection.collectionName)
-        .doc(req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Produtos')
         .doc(req.params.id)
         .get()

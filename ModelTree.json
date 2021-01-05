@@ -213,6 +213,7 @@
               "NumIdentificacaoFuncionario": "",
               "ProdutosVendidos": [
                 {
+                  "Id": "",
                   "Nome": "",
                   "CodigoBarra": "",
                   "CodigoQR": "",

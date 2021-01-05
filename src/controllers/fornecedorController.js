@@ -25,22 +25,22 @@ const moment = require('moment');
 
 // }]
 
-exports.create = async(req, res, next) => {
+exports.create = async (req, res, next) => {
 
     req.body.fornecedor.updatedAt = null
     req.body.fornecedor.createdAt = moment().toJSON()
 
     db
         .collection(req.body.connection.collectionName)
-        .doc(req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Fornecedores')
         .add(req.body.fornecedor)
-        .then(function() {
+        .then(function () {
             console.log(`Fornecedor ${req.body.fornecedor.nome} criado com sucesso `);
             return res.status(201).json({ msg: `Fornecedor ${req.body.fornecedor.nome} criado com sucesso ` })
 
         })
-        .catch(function(error) {
+        .catch(function (error) {
             console.error(`Falha ao cadastrar fornecedor ${req.body.fornecedor.nome} à Rede de Farmacia`, error.message);
             return res.status(500).json({ msg: error.message })
         });
@@ -49,7 +49,7 @@ exports.create = async(req, res, next) => {
 exports.getOne = (req, res, next) => {
     db
         .collection(req.body.connection.collectionName)
-        .doc(req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Fornecedores')
         .doc(req.params.id)
         .get()
@@ -70,17 +70,17 @@ exports.getAll = (req, res, next) => {
     let fornecedores = []
     db
         .collection(req.body.connection.collectionName)
-        .doc(req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Fornecedores')
         .get()
-        .then(async(snap) => {
-            
+        .then(async (snap) => {
+
             await snap.docs.map(doc => {
                 fornecedores.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/fornecedores/' + doc.id })
                 console.log({ id: doc.id, data: doc.data() });
             })
             return res.status(200).json(fornecedores)
-           
+
         })
         .catch(next)
 
@@ -90,7 +90,7 @@ exports.getAll = (req, res, next) => {
 exports.delete = (req, res, next) => {
     db
         .collection(req.body.connection.collectionName)
-        .doc(req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Fornecedores')
         .doc(req.params.id)
         .get()
@@ -113,7 +113,7 @@ exports.delete = (req, res, next) => {
 exports.update = (req, res, next) => {
     db
         .collection(req.body.connection.collectionName)
-        .doc(req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Fornecedores')
         .doc(req.params.id)
         .get()

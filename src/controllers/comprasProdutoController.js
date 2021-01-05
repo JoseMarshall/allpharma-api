@@ -25,7 +25,7 @@ const moment = require('moment');
 //     "UpdatedAt": ""
 // }]
 
-exports.create = async(req, res, next) => {
+exports.create = async (req, res, next) => {
 
     let movimentos = []
 
@@ -63,15 +63,15 @@ exports.create = async(req, res, next) => {
 
     db
         .collection(req.body.connection.collectionName)
-        .doc(req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('ComprasProduto')
         .add(req.body.comprasProduto)
-        .then(function() {
+        .then(function () {
             console.log(`Compras ${req.body.comprasProduto.descricao} criada com sucesso `);
             return res.status(201).json({ msg: `Compras ${req.body.comprasProduto.descricao} criada com sucesso ` })
 
         })
-        .catch(function(error) {
+        .catch(function (error) {
             console.error(`Falha ao cadastrar Compras ${req.body.comprasProduto.descricao} a Rede de Farmacia`, error.message);
             return res.status(500).json({ msg: error.message })
         });
@@ -82,7 +82,7 @@ exports.create = async(req, res, next) => {
 exports.getOne = (req, res, next) => {
     db
         .collection(req.body.connection.collectionName)
-        .doc(req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('ComprasProduto')
         .doc(req.params.id)
         .get()
@@ -103,17 +103,17 @@ exports.getAll = (req, res, next) => {
     let perfis = []
     db
         .collection(req.body.connection.collectionName)
-        .doc(req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('ComprasProduto')
         .get()
         .then(snap => {
-            
+
             snap.docs.map(doc => {
                 perfis.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/comprasProduto/' + doc.id })
                 console.log({ id: doc.id, data: doc.data() });
             })
             return res.status(200).json(perfis)
-           
+
         })
         .catch(next)
 
@@ -123,7 +123,7 @@ exports.getAll = (req, res, next) => {
 exports.delete = (req, res, next) => {
     db
         .collection(req.body.connection.collectionName)
-        .doc(req.body.connection.contaUsuariosId)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('ComprasProduto')
         .doc(req.params.id)
         .get()
