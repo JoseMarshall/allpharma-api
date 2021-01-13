@@ -112,9 +112,9 @@ exports.create = async (req, res, next) => {
         .doc(req.body.farmacia.farmaciaId)
         .collection('Vendas')
         .add(req.body.vendas)
-        .then(function () {
+        .then(function (result) {
             console.log(`Vendas ${req.body.vendas.descricao} criada com sucesso `);
-            return res.status(201).json({ msg: `Vendas ${req.body.vendas.descricao} criada com sucesso ` })
+            return res.status(201).json({ msg: `Vendas ${req.body.vendas.descricao} criada com sucesso `, id: result.id })
 
         })
         .catch(function (error) {
