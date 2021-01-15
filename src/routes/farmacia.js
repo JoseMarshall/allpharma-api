@@ -17,9 +17,12 @@ router.delete('/:id/images', farmaciaController.deleteImages)
 
 router.post('/', farmaciaController.create)
 
+router.get('/getAllWithoutToken', farmaciaController.getAllWithoutToken)
+
 router.get('/:id', farmaciaController.getOne)
 
 router.get('/', farmaciaController.getAll)
+
 
 router.put('/:id', farmaciaController.update)
 

@@ -3,6 +3,11 @@ const jwt = require('jsonwebtoken')
 const { db } = require('../credentials/admin')
 
 exports.checkToken = (req, res, next) => {
+    if (req.headers.authorization === 'allpharma-client-mobile-app') {
+        //Continua a execução chamando o próximo middleware da pilha
+        next()
+        return;
+    }
     try {
         const decodedToken = jwt.verify(req.headers.authorization, process.env.JWT_KEY)
         db

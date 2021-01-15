@@ -73,9 +73,6 @@ exports.getAll = (req, res, next) => {
         .collection('RedeFarmacias')
         .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Farmacias')
-        .orderBy('createdAt')
-        .limit(20)
-        .startAfter(req.body.last || '')
         .get()
         .then((snap) => {
             snap.forEach((doc) => {
@@ -85,6 +82,39 @@ exports.getAll = (req, res, next) => {
 
         })
         .catch(next)
+
+}
+
+
+exports.getAllWithoutToken = (req, res, next) => {
+
+    const array = []
+    db
+        .collection('ContaUsuarios')
+        .where('collectionName', '==', 'RedeFarmacias')
+        .get()
+        .then(snapUsers => {
+            let usersQtd = snapUsers.docs.length
+            for (const user of snapUsers.docs) {
+                db
+                    .collection('RedeFarmacias')
+                    .doc(user.id)
+                    .collection('Farmacias')
+                    .get()
+                    .then((snap) => {
+                        usersQtd--
+                        for (const pharm of snap.docs) {
+                            array.push({ id: pharm.id, ...pharm.data(), link: '/farmacias/' + pharm.id })
+                        }
+                        if (usersQtd === 0) {
+                            return res.status(200).json(array)
+                        }
+
+                    })
+                    .catch(next)
+            }
+
+        })
 
 }
 
