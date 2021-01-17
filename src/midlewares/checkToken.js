@@ -4,6 +4,10 @@ const { db } = require('../credentials/admin')
 
 exports.checkToken = (req, res, next) => {
     if (req.headers.authorization === 'allpharma-client-mobile-app') {
+        req.body.connection = {
+            contaUsuariosOrganizacaoPai: req.query.contaUsuariosOrganizacaoPai,
+            contaUsuariosId: req.query.contaUsuariosOrganizacaoPai,
+        }
         //Continua a execução chamando o próximo middleware da pilha
         next()
         return;
