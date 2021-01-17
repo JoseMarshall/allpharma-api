@@ -100,7 +100,7 @@ exports.getAll = (req, res, next) => {
         .get()
         .then((snap) => {
             snap.docs.forEach(doc => {
-                array.push({ id: doc.id, ...doc.data(), link: '/stocks/' + doc.id })
+                array.push({ id: doc.id, ...doc.data(), farmaciaId: req.params.farmaciaId, link: '/stocks/' + doc.id })
             })
 
             return res.status(200).json(array)
