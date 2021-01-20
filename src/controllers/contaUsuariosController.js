@@ -8,10 +8,9 @@ exports.getOne = (id) => {
         .doc(id)
         .get()
         .then((doc) => {
-            return (doc.exists) ? doc.data() :  { }
+            return (doc.exists) ? doc.data() : {}
         })
         .catch((err) => {
-            console.log(err.message);
             return { erro: err.message }
         })
 }

@@ -113,7 +113,6 @@ exports.create = async (req, res, next) => {
         .collection('Vendas')
         .add(req.body.vendas)
         .then(function (result) {
-            console.log(`Vendas ${req.body.vendas.descricao} criada com sucesso `);
             return res.status(201).json({ msg: `Vendas ${req.body.vendas.descricao} criada com sucesso `, id: result.id })
 
         })
@@ -136,7 +135,6 @@ exports.getOne = (req, res, next) => {
         .get()
         .then(doc => {
             if (doc.exists) {
-                console.log(doc.data());
                 return res.status(200).json(doc.data())
 
             } else {
@@ -159,7 +157,6 @@ exports.getAll = (req, res, next) => {
         .then((snap) => {
             snap.docs.map(doc => {
                 array.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/vendas/' + doc.id })
-                console.log({ id: doc.id, data: doc.data() });
             })
 
             return res.status(200).json(array)

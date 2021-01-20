@@ -55,7 +55,6 @@ exports.getOne = (req, res, next) => {
         .get()
         .then(doc => {
             if (doc.exists) {
-                console.log(doc.data());
                 return res.status(200).json(doc.data())
 
             } else {
@@ -77,7 +76,6 @@ exports.getAll = (req, res, next) => {
 
             await snap.docs.map(doc => {
                 fornecedores.push({ id: doc.id, data: doc.data(), link: process.env.URL_ROOT + '/fornecedores/' + doc.id })
-                console.log({ id: doc.id, data: doc.data() });
             })
             return res.status(200).json(fornecedores)
 
