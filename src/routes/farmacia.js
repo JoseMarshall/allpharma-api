@@ -11,6 +11,8 @@ router.put('/encomenda/:id', farmaciaController.updateEncomenda)
 
 router.get('/:id/images', farmaciaController.getAllImages)
 
+router.get('/:id/employees', farmaciaController.getAllFuncionarios)
+
 router.post('/:id/images', farmaciaController.uploadImage)
 
 router.delete('/:id/images', farmaciaController.deleteImages)
