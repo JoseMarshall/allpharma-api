@@ -20,7 +20,7 @@ const moment = require('moment');
 
 exports.create = async (req, res, next) => {
 
-    const { found, stock } = await contains(req.body.stock.codigoBarra, req)
+    const { found, stock } = await contains(req.body.stock.id, req)
     if (!found) {
         req.body.stock.updatedAt = null
         req.body.stock.createdAt = moment().toJSON()
@@ -113,33 +113,46 @@ exports.getAll = (req, res, next) => {
 
 exports.update = (req, res, next) => {
 
+    function errorHandling(error) {
+        if (!res.headersSent) {
+            res.status(500).send({
+                msg: 'Error while updating',
+                error
+            })
+        }
+    }
+
     const stockCollection = db
         .collection('RedeFarmacias')
         .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Farmacias')
         .doc(req.params.farmaciaId)
         .collection('Stocks')
+
     req.body.newStock.forEach((product) => {
         const { id } = product
         delete product.id
-        stockCollection.doc(id)
-            .update(product)
-            .then((result) => {
-                if (!res.headersSent) {
-                    res.status(201).send({
-                        msg: 'Updated Successfuly',
-                        result
-                    })
+        stockCollection.where('id', '==', id)
+            .get()
+            .then((stock) => {
+                if (!stock.empty) {
+                    stock.docs[0].ref
+                        .update(product)
+                        .then((result) => {
+                            if (!res.headersSent) {
+                                res.status(201).send({
+                                    msg: 'Updated Successfuly',
+                                    result
+                                })
+                            }
+                        })
+                        .catch(errorHandling)
+                }
+                else {
+                    errorHandling('Produto nao encontrado')
                 }
             })
-            .catch((error) => {
-                if (!res.headersSent) {
-                    res.status(500).send({
-                        msg: 'Error while updating',
-                        error
-                    })
-                }
-            })
+            .catch(errorHandling)
     })
 
 }
@@ -170,7 +183,7 @@ exports.delete = (req, res, next) => {
 }
 
 
-async function contains(barCode, { body, params }) {
+async function contains(id, { body, params }) {
     let obj
     await db
         .collection('RedeFarmacias')
@@ -178,7 +191,7 @@ async function contains(barCode, { body, params }) {
         .collection('Farmacias')
         .doc(params.farmaciaId)
         .collection('Stocks')
-        .where('codigoBarra', '==', barCode)
+        .where('id', '==', id)
         .get()
         .then(function (result) {
             return obj = (!result.empty) ? { found: true, stock: { id: result.docs[0].id, ...result.docs[0].data() } } : { found: false }
