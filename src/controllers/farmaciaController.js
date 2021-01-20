@@ -85,6 +85,26 @@ exports.getAll = (req, res, next) => {
 
 }
 
+exports.getAllFuncionarios = (req, res, next) => {
+
+    let array = []
+    db
+        .collection(req.body.connection.collectionName)
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
+        .collection('Funcionarios')
+        .where('farmacia.farmaciaId', '==', req.params.id)
+        .get()
+        .then((snap) => {
+            snap.forEach((doc) => {
+                array.push({ id: doc.id, ...doc.data(), })
+            })
+            return res.status(200).json(array)
+
+        })
+        .catch(next)
+
+}
+
 
 exports.getAllWithoutToken = (req, res, next) => {
 
@@ -119,10 +139,21 @@ exports.getAllWithoutToken = (req, res, next) => {
 }
 
 
+function deleteUsersAccount(pharmId) {
+    db.collection('ContaUsuarios')
+        .where('farmaciaId', '==', pharmId)
+        .get()
+        .then(users => {
+            users.forEach(user => {
+                user.ref.delete()
+            })
+        })
+        .catch(console.log)
+}
 exports.delete = (req, res, next) => {
     db
-        .collection(req.body.connection.collectionName)
-        .doc(req.body.connection.contaUsuariosId)
+        .collection('RedeFarmacias')
+        .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('Farmacias')
         .doc(req.params.id)
         .get()
@@ -130,6 +161,7 @@ exports.delete = (req, res, next) => {
             if (doc.exists) {
                 doc.ref.delete()
                     .then((result) => {
+                        deleteUsersAccount(req.params.id)
                         return res.status(200).json({ msg: 'Deleted Successfully', result })
                     })
                     .catch(next)
