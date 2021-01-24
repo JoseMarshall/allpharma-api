@@ -14,7 +14,7 @@ exports.create = async (req, res, next) => {
         .collection(req.body.connection.collectionName)
         .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
         .collection('CategoriasProduto')
-        .add({ nome: req.body.categoria.nome })
+        .add({ nome: req.body.categoriaProduto.nome })
         .then(function () {
             return res.status(201).json({ msg: `Categoria ${req.body.categoriaProduto.nome} criada com sucesso ` })
         })
