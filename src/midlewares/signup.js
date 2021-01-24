@@ -16,7 +16,6 @@ const clientePacienteController = require('../controllers/clientePacienteControl
 
 
 exports.createAccount = async (req, res, next) => {
-    req.body.contaUsuarios = {}
     await CheckerController.generateNewCredentials(req.body).then(async (x) => {
         req.body.contaUsuarios.userName = x.userName
         req.body.contaUsuarios.password = x.password
