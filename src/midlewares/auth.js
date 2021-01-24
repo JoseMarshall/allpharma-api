@@ -208,6 +208,7 @@ exports.requestPassword = (req, res, next) => {
                 const codigoVerificacao = Math.floor((Math.random() * 999999) + 100000)
                 doc.ref.update({
                     codigoVerificacao: codigoVerificacao,
+                    enabled: false,
                     updatedAt: moment().toJSON()
                 })
                     .then(() => {
