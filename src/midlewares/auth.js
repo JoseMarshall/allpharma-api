@@ -148,7 +148,10 @@ exports.setNewPassword = (req, res, next) => {
                 .get()
                 .then((doc) => {
                     if (doc.exists) {
-                        if (doc.data().passwordHash === req.body.passwordHash) {
+                        if (bcrypt.compareSync(
+                            req.body.oldPassword,
+                            doc.data().passwordHash
+                        )) {
                             doc.ref.update({
                                 passwordHash: hash,
                                 codigoVerificacao: null,
@@ -300,8 +303,8 @@ exports.reactivateAccount = (req, res, next) => {
 
                             return res.status(201).send({
                                 msg: 'Abre o email e checa se recebeu a sua nova Palavra-Passe',
-                                password: newPassword, // ELIMINAR ESTA KEY
-                                userName: req.query.username // ELIMINAR ESTA KEY
+                                password: newPassword,
+                                userName: req.query.username
                             })
 
                         }).catch(next)
