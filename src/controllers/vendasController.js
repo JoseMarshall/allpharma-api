@@ -58,9 +58,31 @@ exports.create = async (req, res, next) => {
     let movimentos = []
 
     await req.body.vendas.produtosVendidos.map((p) => {
+        /**
+         * Decrease the availability of the product
+         */
+        db
+            .collection('RedeFarmacias')
+            .doc(req.body.connection.contaUsuariosOrganizacaoPai || req.body.connection.contaUsuariosId)
+            .collection('Farmacias')
+            .doc(req.body.farmacia.farmaciaId)
+            .collection('Stocks')
+            .where('id', '==', p.id)
+            .get()
+            .then((snap) => {
+                snap.forEach(doc => {
+                    const { quantidadeDisponivel } = doc.data()
+                    doc.ref.update({
+                        quantidadeDisponivel: quantidadeDisponivel - p.quantity,
+                        updatedAt: moment().toJSON(),
+
+                    })
+                })
+            })
+
         const myObj1 = {
             referencia: guid.create().value,
-            debito: p.precoUnitarioVenda * p.quantidade,
+            debito: p.precoUnitarioVenda * p.quantity,
             credito: 0,
             planoContas: {
                 numeroConta: "45",
@@ -73,7 +95,7 @@ exports.create = async (req, res, next) => {
         const myObj2 = {
             referencia: guid.create().value,
             debito: 0,
-            credito: p.precoUnitarioVenda * p.quantidade,
+            credito: p.precoUnitarioVenda * p.quantity,
             planoContas: {
                 numeroConta: "26",
                 descricaoConta: "Mercadorias"
